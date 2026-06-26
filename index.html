@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="es">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta name="description" content="CDxGems — Emergency medical AI for Venezuela and communities without access to doctors.">
+<meta name="theme-color" content="#0f172a">
+<title>CDxGems | Asistente Médico de Emergencias</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Manrope:wght@300;400;500;700;800&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script id="tailwind-config">
+tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1b","surface-container-lowest":"#ffffff","on-surface":"#171d1b","surface-container-low":"#eff5f1","background":"#f5fbf7","on-primary-container":"#00322a","surface-tint":"#006b5b","clinical-red":"#dc2626","on-primary-fixed":"#00201a","surface-container-high":"#e4eae6","surface-variant":"#dee4e0","on-surface-variant":"#3d4946","surface-container-highest":"#dee4e0","neutral-gray":"#F4F7F6","surface-container":"#e9efec","outline":"#6d7a76","outline-variant":"#bccac4","surface-dim":"#d5dbd8","surface":"#f5fbf7","primary-container":"#12a58e","on-primary":"#ffffff","primary":"#006b5b","dark-navy":"#0f172a","gem-teal":"#60dac1"},borderRadius:{"DEFAULT":"1rem","lg":"2rem","xl":"3rem","full":"9999px"},fontFamily:{"body-md":["Inter"],"label-capsule":["Manrope"],"data-mono":["JetBrains Mono"],"headline-md":["Manrope"],"body-lg":["Inter"],"headline-lg":["Manrope"]},fontSize:{"body-md":["16px",{"lineHeight":"1.5","fontWeight":"400"}],"label-capsule":["24px",{"lineHeight":"1","letterSpacing":"0.05em","fontWeight":"300"}],"data-mono":["14px",{"lineHeight":"1.4","fontWeight":"500"}],"headline-md":["32px",{"lineHeight":"1.3","fontWeight":"400"}],"body-lg":["18px",{"lineHeight":"1.6","fontWeight":"400"}],"headline-lg":["48px",{"lineHeight":"1.2","letterSpacing":"-0.02em","fontWeight":"300"}]}}}}
+</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+.capsule-btn{padding:12px 32px;border-radius:9999px;font-family:'Manrope',sans-serif;font-weight:500;transition:all 0.2s cubic-bezier(0.4,0,0.2,1)}
+.glass-card{background:rgba(255,255,255,0.1);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.2)}
+#ergyModal{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
+#ergyModal.open{display:flex}
+/* Language switcher */
+#langMenu{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:0.5px solid #bccac4;border-radius:12px;overflow:hidden;min-width:140px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:300}
+#langMenu.open{display:block}
+.lang-opt{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;font-weight:500;cursor:pointer;color:#171d1b;transition:background .12s}
+.lang-opt:hover{background:#eff5f1}
+.lang-opt.active{color:#006b5b;font-weight:700}
+.lang-flag{font-size:18px;line-height:1}
+/* Chips */
+.sym-chip{cursor:pointer;padding:7px 13px;border-radius:9999px;border:1px solid #bccac4;font-size:12px;transition:all .15s;color:#3d4946;background:#fff;white-space:nowrap}
+.sym-chip.active{background:#dc2626;color:#fff;border-color:#dc2626}
+/* CPR */
+@keyframes cprPulse{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.18);opacity:1}}
+.cpr-ring{animation:cprPulse 0.54s ease-in-out infinite}
+/* Chat */
+.bubble-ai{background:#1e293b;color:#e2e8f0;border-radius:16px 16px 16px 4px;padding:12px 16px;max-width:85%;font-size:14px;line-height:1.65;align-self:flex-start}
+.bubble-user{background:#006b5b;color:#fff;border-radius:16px 16px 4px 16px;padding:12px 16px;max-width:85%;font-size:14px;line-height:1.65;align-self:flex-end}
+.bubble-thinking{background:#1e293b;color:#64748b;border-radius:16px 16px 16px 4px;padding:12px 16px;font-size:13px;align-self:flex-start;font-style:italic}
+#chatMessages::-webkit-scrollbar{width:4px}
+#chatMessages::-webkit-scrollbar-track{background:transparent}
+#chatMessages::-webkit-scrollbar-thumb{background:#334155;border-radius:2px}
+@keyframes urgFlash{0%,100%{opacity:1}50%{opacity:.5}}
+.urge-flash{animation:urgFlash 1.2s ease-in-out infinite}
+</style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+
+<nav class="bg-surface fixed top-0 left-0 w-full z-50 border-b border-outline-variant transition-all duration-300" id="mainNav">
+  <div class="flex justify-between items-center w-full px-4 md:px-16 py-4 max-w-[1200px] mx-auto">
+    <div class="font-headline-md text-2xl text-white bg-dark-navy px-4 py-1.5 rounded-lg flex items-center">CDx<span class="text-gem-teal">GEMS</span></div>
+    <div class="hidden md:flex items-center space-x-8">
+      <a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-capsule text-[13px] tracking-wider uppercase" href="#" data-i18n="nav_consult">Consulta</a>
+      <a class="text-on-surface-variant hover:text-primary transition-colors font-label-capsule text-[13px] tracking-wider uppercase" href="#firstAidSection" data-i18n="nav_firstaid">Primeros Auxilios</a>
+    </div>
+    <div class="flex items-center space-x-2">
+      <button onclick="openErgy('general')" class="text-primary font-bold px-4 py-2 hover:bg-surface-container-low rounded-full transition-all text-sm active:scale-95">Ergy AI</button>
+      <button onclick="openErgy('emergency')" class="bg-primary text-on-primary capsule-btn hover:shadow-lg active:scale-95 text-sm" data-i18n="nav_emergency">Emergencia</button>
+      <!-- Language switcher -->
+      <div class="relative" id="langSwitcher">
+        <button onclick="toggleLangMenu()" class="flex items-center gap-1.5 px-3 py-2 rounded-full border border-outline-variant hover:bg-surface-container-low transition-all text-sm font-bold text-on-surface" id="langBtn">
+          <span id="currentFlag">🇻🇪</span>
+          <span id="currentLang" class="text-xs font-bold">ES</span>
+          <span class="material-symbols-outlined text-base text-on-surface-variant">expand_more</span>
+        </button>
+        <div id="langMenu">
+          <div class="lang-opt active" onclick="setLang('es')"><span class="lang-flag">🇻🇪</span>Español</div>
+          <div class="lang-opt" onclick="setLang('en')"><span class="lang-flag">🇺🇸</span>English</div>
+          <div class="lang-opt" onclick="setLang('pt')"><span class="lang-flag">🇧🇷</span>Português</div>
+          <div class="lang-opt" onclick="setLang('fr')"><span class="lang-flag">🇫🇷</span>Français</div>
+          <div class="lang-opt" onclick="setLang('zh')"><span class="lang-flag">🇨🇳</span>中文</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="pt-20">
+  <!-- Emergency Banner -->
+  <div class="bg-clinical-red text-white py-4 px-4 md:px-16">
+    <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <span class="material-symbols-outlined text-3xl urge-flash">emergency</span>
+        <div>
+          <p class="font-bold uppercase tracking-widest text-sm" data-i18n="banner_title">Protocolo de Emergencia Activo</p>
+          <p class="text-xs opacity-90" data-i18n="banner_sub">Triage inmediato con IA — funciona con conectividad limitada.</p>
+        </div>
+      </div>
+      <button onclick="openErgy('emergency')" class="bg-white text-clinical-red px-8 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-neutral-100 transition-all shadow-lg active:scale-95 shrink-0">
+        <span class="material-symbols-outlined">sensors</span><span data-i18n="banner_btn">INICIAR PROTOCOLO</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="relative w-full min-h-[700px] flex items-center overflow-hidden bg-dark-navy">
+    <div class="absolute inset-0 opacity-10 pointer-events-none">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gem-teal via-transparent to-transparent"></div>
+    </div>
+    <div class="relative z-10 max-w-[1200px] mx-auto px-4 md:px-16 grid md:grid-cols-2 gap-12 items-center py-20">
+      <div class="text-white space-y-8">
+        <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full glass-card">
+          <span class="material-symbols-outlined text-gem-teal">robot_2</span>
+          <span class="text-[13px] font-bold tracking-widest uppercase" data-i18n="hero_badge">Ergy: Tu Asistente Clínico con IA</span>
+        </div>
+        <h1 class="font-headline-lg text-5xl md:text-6xl leading-tight" data-i18n="hero_h1">Atención Precisa,<br><span class="font-extrabold italic text-gem-teal">Impulsada por Ergy.</span></h1>
+        <p class="text-body-lg opacity-80 max-w-md" data-i18n="hero_sub">Triage multiespecialidad con IA para emergencias y apoyo clínico remoto — diseñado para Venezuela y comunidades sin acceso médico suficiente.</p>
+        <div class="flex flex-wrap gap-4 pt-4">
+          <button onclick="openErgy('general')" class="bg-gem-teal text-dark-navy capsule-btn hover:bg-white active:scale-95 flex items-center gap-2 font-bold">
+            <span class="material-symbols-outlined">chat</span><span data-i18n="hero_btn1">Hablar con Ergy</span>
+          </button>
+          <button onclick="document.getElementById('firstAidSection').scrollIntoView({behavior:'smooth'})" class="border-2 border-white/30 text-white capsule-btn hover:bg-white/10 active:scale-95" data-i18n="hero_btn2">
+            Guías de Primeros Auxilios
+          </button>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="max-w-md mx-auto rounded-3xl overflow-hidden border-4 border-white/10 shadow-2xl relative z-10 glass-card p-8 flex flex-col justify-center items-center text-center">
+          <div class="w-32 h-32 bg-gem-teal/20 rounded-full flex items-center justify-center mb-8">
+            <span class="material-symbols-outlined text-6xl text-gem-teal">clinical_notes</span>
+          </div>
+          <h2 class="text-2xl font-bold mb-4 text-white" data-i18n="card_title">Consulta con Ergy AI</h2>
+          <p class="text-sm opacity-70 mb-4 text-white" data-i18n="card_sub">Triage multiespecialidad. Diseñado para zonas con acceso médico limitado.</p>
+          <div class="flex gap-2 mb-8 flex-wrap justify-center">
+            <span class="bg-white/10 text-white text-xs px-3 py-1 rounded-full" data-i18n="spec1">Cardiología</span>
+            <span class="bg-white/10 text-white text-xs px-3 py-1 rounded-full" data-i18n="spec2">Trauma</span>
+            <span class="bg-white/10 text-white text-xs px-3 py-1 rounded-full" data-i18n="spec3">Pediatría</span>
+            <span class="bg-white/10 text-white text-xs px-3 py-1 rounded-full" data-i18n="spec4">Toxicología</span>
+          </div>
+          <button onclick="openErgy('general')" class="w-full bg-white text-dark-navy py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gem-teal transition-all">
+            <span data-i18n="card_btn">Consultar Ahora</span> <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </div>
+        <div class="absolute -top-12 -right-12 w-64 h-64 bg-gem-teal/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-clinical-red/10 rounded-full blur-3xl pointer-events-none"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gems Activos -->
+  <section class="py-24 bg-surface-container-low overflow-hidden">
+    <div class="max-w-[1200px] mx-auto px-4 md:px-16">
+      <div class="mb-16">
+        <p class="text-gem-teal font-data-mono text-sm tracking-[0.3em] uppercase mb-4" data-i18n="gems_eyebrow">Sinergia</p>
+        <h2 class="font-headline-lg text-5xl text-dark-navy" data-i18n="gems_title">Gems Activos</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div onclick="openErgy('general')" class="bg-white p-8 rounded-3xl border border-outline-variant hover:shadow-xl transition-all group cursor-pointer">
+          <div class="w-14 h-14 bg-dark-navy rounded-2xl flex items-center justify-center mb-12 text-white group-hover:scale-110 transition-transform"><span class="material-symbols-outlined text-3xl">chat_bubble</span></div>
+          <h3 class="text-2xl font-bold mb-2" data-i18n="gem1_title">Chat con Ergy</h3>
+          <p class="text-on-surface-variant text-sm mb-6" data-i18n="gem1_sub">Consulta síntomas, dosis y procedimientos en tiempo real.</p>
+          <div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden"><div class="h-full bg-dark-navy w-3/4"></div></div>
+        </div>
+        <div onclick="openErgy('vitals')" class="bg-white p-8 rounded-3xl border border-outline-variant hover:shadow-xl transition-all group cursor-pointer">
+          <div class="w-14 h-14 bg-gem-teal rounded-2xl flex items-center justify-center mb-12 text-white group-hover:scale-110 transition-transform"><span class="material-symbols-outlined text-3xl">vital_signs</span></div>
+          <h3 class="text-2xl font-bold mb-2" data-i18n="gem2_title">Signos Vitales</h3>
+          <p class="text-on-surface-variant text-sm mb-6" data-i18n="gem2_sub">Ingresa los valores del paciente para interpretación inmediata.</p>
+          <div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden"><div class="h-full bg-gem-teal w-1/2"></div></div>
+        </div>
+        <div onclick="document.getElementById('firstAidSection').scrollIntoView({behavior:'smooth'})" class="bg-white p-8 rounded-3xl border border-outline-variant hover:shadow-xl transition-all group cursor-pointer">
+          <div class="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center mb-12 text-clinical-red group-hover:scale-110 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-2" data-i18n="gem3_title">Primeros Auxilios</h3>
+          <p class="text-on-surface-variant text-sm mb-6" data-i18n="gem3_sub">RCP, hemorragia, asfixia, quemaduras — paso a paso.</p>
+          <div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden"><div class="h-full bg-clinical-red w-2/3"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- First Aid -->
+  <section id="firstAidSection" class="py-24 bg-white border-t border-outline-variant">
+    <div class="max-w-[1000px] mx-auto px-4 md:px-16">
+      <div class="text-center mb-16">
+        <span class="bg-clinical-red/10 text-clinical-red px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest" data-i18n="fa_eyebrow">Protocolos de Emergencia</span>
+        <h2 class="text-4xl font-headline-md text-dark-navy mt-4 mb-4" data-i18n="fa_title">Guías de Primeros Auxilios</h2>
+        <p class="text-on-surface-variant max-w-xl mx-auto" data-i18n="fa_sub">Paso a paso para las emergencias más críticas. Funciona sin internet. Comparte esta página.</p>
+      </div>
+      <div class="flex gap-3 mb-10 flex-wrap">
+        <button onclick="showProtocol('p1')" id="tab-p1" class="capsule-btn bg-dark-navy text-white text-sm" data-i18n="tab1">RCP</button>
+        <button onclick="showProtocol('p2')" id="tab-p2" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm" data-i18n="tab2">Control de sangrado</button>
+        <button onclick="showProtocol('p3')" id="tab-p3" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm" data-i18n="tab3">Asfixia</button>
+        <button onclick="showProtocol('p4')" id="tab-p4" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm" data-i18n="tab4">Quemaduras</button>
+      </div>
+
+      <!-- Protocol 1: CPR -->
+      <div id="proto-p1" class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="space-y-4">
+          <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl hover:bg-neutral-50 transition-colors"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold" data-i18n="cpr1_t">Verifica respuesta</p><p class="text-sm text-on-surface-variant" data-i18n="cpr1_d">Sacude los hombros y llama en voz alta. Si no responde, llama a emergencias de inmediato.</p></div></div>
+          <div class="flex gap-4 items-start p-4 border border-primary rounded-2xl bg-primary/5"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold" data-i18n="cpr2_t">Ritmo de compresiones</p><p class="text-sm text-on-surface-variant" data-i18n="cpr2_d">100–120 compresiones por minuto. Presiona fuerte — mínimo 5 cm en el centro del pecho.</p></div></div>
+          <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl hover:bg-neutral-50 transition-colors"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold" data-i18n="cpr3_t">Respiraciones de rescate</p><p class="text-sm text-on-surface-variant" data-i18n="cpr3_d">30 compresiones → 2 respiraciones. Inclina la cabeza, levanta el mentón, sella la boca.</p></div></div>
+          <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl hover:bg-neutral-50 transition-colors"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">4</span><div><p class="font-bold" data-i18n="cpr4_t">No te detengas</p><p class="text-sm text-on-surface-variant" data-i18n="cpr4_d">Continúa sin parar hasta que llegue ayuda o el paciente recupere pulso y respiración.</p></div></div>
+          <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span><span data-i18n="fa_ergy_btn">Guía en tiempo real con Ergy</span></button>
+        </div>
+        <div class="flex items-center justify-center">
+          <div class="relative w-64 h-64 flex items-center justify-center">
+            <div class="cpr-ring absolute inset-0 rounded-full border-4 border-clinical-red opacity-30"></div>
+            <div class="absolute inset-4 rounded-full border-4 border-clinical-red opacity-20 cpr-ring" style="animation-delay:.12s"></div>
+            <div class="w-40 h-40 bg-clinical-red/10 rounded-full border-2 border-clinical-red flex items-center justify-center"><span class="material-symbols-outlined text-7xl text-clinical-red">favorite</span></div>
+            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-dark-navy text-white text-xs px-4 py-1 rounded-full font-mono tracking-widest" data-i18n="cpr_bpm">110 lpm</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Protocol 2: Bleeding -->
+      <div id="proto-p2" class="hidden space-y-4">
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold" data-i18n="bl1_t">Protégete primero</p><p class="text-sm text-on-surface-variant" data-i18n="bl1_d">Usa guantes o bolsa plástica antes de tocar sangre.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-clinical-red rounded-2xl bg-red-50"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold" data-i18n="bl2_t">Presión directa y firme</p><p class="text-sm text-on-surface-variant" data-i18n="bl2_d">Presiona con tela limpia. No levantes — agrega otro paño encima si se empapa.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold" data-i18n="bl3_t">Eleva la extremidad</p><p class="text-sm text-on-surface-variant" data-i18n="bl3_d">Levanta la herida por encima del corazón si es posible.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">4</span><div><p class="font-bold" data-i18n="bl4_t">Torniquete (último recurso)</p><p class="text-sm text-on-surface-variant" data-i18n="bl4_d">Solo si el sangrado es masivo: 5–7 cm sobre la herida, aprieta hasta detenerlo. Anota la hora.</p></div></div>
+        <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span><span data-i18n="fa_ergy_btn">Guía en tiempo real con Ergy</span></button>
+      </div>
+
+      <!-- Protocol 3: Choking -->
+      <div id="proto-p3" class="hidden space-y-4">
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold" data-i18n="ch1_t">Confirma la asfixia</p><p class="text-sm text-on-surface-variant" data-i18n="ch1_d">¿Te estás ahogando? Si no puede hablar, toser ni respirar — actúa de inmediato.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-clinical-red rounded-2xl bg-red-50"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold" data-i18n="ch2_t">5 golpes en la espalda</p><p class="text-sm text-on-surface-variant" data-i18n="ch2_d">Inclínalo hacia adelante. Golpea firme entre los omóplatos con el talón de la mano.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold" data-i18n="ch3_t">5 compresiones abdominales (Heimlich)</p><p class="text-sm text-on-surface-variant" data-i18n="ch3_d">Párate detrás. Puño encima del ombligo, otra mano sobre el puño. Jala hacia adentro y arriba.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">4</span><div><p class="font-bold" data-i18n="ch4_t">Si pierde el conocimiento</p><p class="text-sm text-on-surface-variant" data-i18n="ch4_d">Bájalo al suelo, inicia RCP. Revisa la boca antes de cada respiración.</p></div></div>
+        <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span><span data-i18n="fa_ergy_btn">Guía en tiempo real con Ergy</span></button>
+      </div>
+
+      <!-- Protocol 4: Burns -->
+      <div id="proto-p4" class="hidden space-y-4">
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold" data-i18n="bu1_t">Enfría la quemadura</p><p class="text-sm text-on-surface-variant" data-i18n="bu1_d">Agua fresca (no fría) durante 10–20 minutos. Nunca hielo.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-amber-400 rounded-2xl bg-amber-50"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold" data-i18n="bu2_t">Retira lo que apriete</p><p class="text-sm text-on-surface-variant" data-i18n="bu2_d">Quita joyas y ropa cerca de la quemadura antes de que inflame.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold" data-i18n="bu3_t">Cubre con cuidado</p><p class="text-sm text-on-surface-variant" data-i18n="bu3_d">Gasa limpia. No revientes ampollas. Nada de mantequilla ni pasta dental.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">!</span><div><p class="font-bold text-clinical-red" data-i18n="bu4_t">Atención urgente si:</p><p class="text-sm text-on-surface-variant" data-i18n="bu4_d">Cara, manos, pies, genitales o articulaciones. Área mayor que la palma. Cualquier quemadura en niños.</p></div></div>
+        <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span><span data-i18n="fa_ergy_btn">Guía en tiempo real con Ergy</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-dark-navy text-white py-16 border-t border-white/5">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-16 max-w-[1200px] mx-auto">
+      <div><div class="text-white font-headline-md text-2xl mb-6">CDx<span class="text-gem-teal">Gems</span></div><p class="text-white/60 text-sm leading-relaxed" data-i18n="footer_desc">Salud de emergencia con IA para Venezuela y comunidades sin acceso médico suficiente.</p></div>
+      <div class="flex flex-col gap-4"><h4 class="text-gem-teal font-bold mb-2">Ergy AI</h4><a class="text-white/60 hover:text-white transition-colors text-sm cursor-pointer" onclick="openErgy('general')" data-i18n="footer_general">Consulta general</a><a class="text-white/60 hover:text-white transition-colors text-sm cursor-pointer" onclick="openErgy('emergency')" data-i18n="footer_emergency">Emergencia</a><a class="text-white/60 hover:text-white transition-colors text-sm cursor-pointer" onclick="openErgy('vitals')" data-i18n="footer_vitals">Signos vitales</a></div>
+      <div class="flex flex-col gap-4"><h4 class="text-gem-teal font-bold mb-2" data-i18n="footer_legal_title">Legal</h4><a class="text-white/60 hover:text-white transition-colors text-sm" href="#" data-i18n="footer_terms">Términos de Uso</a><a class="text-white/60 hover:text-white transition-colors text-sm" href="#" data-i18n="footer_privacy">Privacidad</a></div>
+    </div>
+    <div class="max-w-[1200px] mx-auto px-4 md:px-16 mt-12 pt-8 border-t border-white/5 text-center">
+      <p class="text-white/40 text-[12px]" data-i18n="footer_copy">© 2026 CDxGems. Ergy AI es una herramienta de apoyo clínico — no reemplaza la atención médica profesional.</p>
+    </div>
+  </footer>
+</main>
+
+<!-- ERGY MODAL -->
+<div id="ergyModal" role="dialog" aria-modal="true">
+  <div class="bg-dark-navy w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl border border-white/10 flex flex-col max-h-[90vh]">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-gem-teal/20 rounded-xl flex items-center justify-center"><span class="material-symbols-outlined text-gem-teal text-xl">robot_2</span></div>
+        <div><p class="font-bold text-white text-sm">Ergy AI</p><p class="text-gem-teal text-xs" id="ergyStatus">Asistente clínico multiespecialidad</p></div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex gap-1 bg-white/5 rounded-full p-1">
+          <button onclick="setMode('general')" id="modeGeneral" class="px-3 py-1 rounded-full text-xs font-bold transition-all text-white/50" data-i18n="mode_general">General</button>
+          <button onclick="setMode('emergency')" id="modeEmergency" class="px-3 py-1 rounded-full text-xs font-bold transition-all text-white/50" data-i18n="mode_emergency">Emergencia</button>
+          <button onclick="setMode('vitals')" id="modeVitals" class="px-3 py-1 rounded-full text-xs font-bold transition-all text-white/50" data-i18n="mode_vitals">Vitales</button>
+        </div>
+        <button onclick="closeErgy()" class="text-white/50 hover:text-white transition-colors"><span class="material-symbols-outlined">close</span></button>
+      </div>
+    </div>
+    <div id="chatPanel" class="flex flex-col flex-1 overflow-hidden">
+      <div id="symptomBar" class="hidden px-4 pt-3 pb-2 border-b border-white/10 flex-wrap gap-2">
+        <span class="text-white/40 text-xs w-full mb-1" data-i18n="chip_label">Síntomas rápidos:</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip1">Dolor en el pecho</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip2">Sin pulso</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip3">No respira</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip4">Sangrado grave</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip5">Inconsciente</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip6">Fiebre +39°C</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip7">Convulsiones</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip8">Dificultad para respirar</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip9">Trauma / Caída</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip10">Quemadura</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip11">Paciente niño</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip12">Embarazo</span>
+        <span class="sym-chip" onclick="addSymptom(this)" data-i18n="chip13">Mordedura / Veneno</span>
+      </div>
+      <div id="chatMessages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 min-h-[260px]"></div>
+      <div class="px-4 py-3 border-t border-white/10 flex gap-3 items-end shrink-0">
+        <textarea id="chatInput" rows="2" class="flex-1 bg-white/5 border border-white/15 rounded-2xl px-4 py-3 text-white text-sm placeholder-white/30 resize-none focus:outline-none focus:border-gem-teal transition-colors" data-i18n-placeholder="chat_placeholder"></textarea>
+        <button onclick="sendMessage()" class="bg-gem-teal text-dark-navy w-10 h-10 rounded-xl flex items-center justify-center font-bold hover:bg-white transition-all active:scale-95 shrink-0"><span class="material-symbols-outlined text-xl">send</span></button>
+      </div>
+    </div>
+    <div id="vitalsPanel" class="hidden flex-1 overflow-y-auto p-6 flex flex-col gap-4">
+      <p class="text-white/60 text-sm" data-i18n="vitals_intro">Ingresa los valores del paciente. Ergy señalará lecturas anormales y acciones inmediatas.</p>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="text-white/50 text-xs mb-1 block" data-i18n="v_hr">Frecuencia cardíaca (lpm)</label><input id="v-hr" type="number" placeholder="72" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-gem-teal"/></div>
+        <div><label class="text-white/50 text-xs mb-1 block" data-i18n="v_temp">Temperatura (°C)</label><input id="v-temp" type="number" step="0.1" placeholder="37.0" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-gem-teal"/></div>
+        <div><label class="text-white/50 text-xs mb-1 block" data-i18n="v_bp">Presión arterial (mmHg)</label><input id="v-bp" type="text" placeholder="120/80" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-gem-teal"/></div>
+        <div><label class="text-white/50 text-xs mb-1 block" data-i18n="v_spo2">Saturación O₂ (%)</label><input id="v-spo2" type="number" placeholder="98" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-gem-teal"/></div>
+        <div><label class="text-white/50 text-xs mb-1 block" data-i18n="v_age">Edad</label><input id="v-age" type="number" placeholder="35" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-gem-teal"/></div>
+        <div><label class="text-white/50 text-xs mb-1 block" data-i18n="v_sex">Sexo</label><select id="v-sex" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-gem-teal">
+          <option value="" style="background:#0f172a" data-i18n="v_sex_sel">Seleccionar</option>
+          <option value="M" style="background:#0f172a" data-i18n="v_sex_m">Masculino</option>
+          <option value="F" style="background:#0f172a" data-i18n="v_sex_f">Femenino</option>
+        </select></div>
+      </div>
+      <div><label class="text-white/50 text-xs mb-1 block" data-i18n="v_notes">Condiciones conocidas / alergias</label><textarea id="v-notes" rows="2" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white text-sm resize-none focus:outline-none focus:border-gem-teal" data-i18n-placeholder="v_notes_ph"></textarea></div>
+      <button onclick="evalVitals()" class="w-full bg-gem-teal text-dark-navy py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-white transition-all active:scale-95"><span class="material-symbols-outlined">troubleshoot</span><span data-i18n="vitals_btn">Evaluar con Ergy</span></button>
+      <div id="vitalsResult" class="hidden bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm leading-relaxed"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== TRANSLATIONS =====================
+const T = {
+  es:{flag:'🇻🇪',code:'ES',dir:'ltr',
+    nav_consult:'Consulta',nav_firstaid:'Primeros Auxilios',nav_emergency:'Emergencia',
+    banner_title:'Protocolo de Emergencia Activo',banner_sub:'Triage inmediato con IA — funciona con conectividad limitada.',banner_btn:'INICIAR PROTOCOLO',
+    hero_badge:'Ergy: Tu Asistente Clínico con IA',
+    hero_h1:'Atención Precisa,<br><span class="font-extrabold italic text-gem-teal">Impulsada por Ergy.</span>',
+    hero_sub:'Triage multiespecialidad con IA para emergencias y apoyo clínico remoto — diseñado para Venezuela y comunidades sin acceso médico suficiente.',
+    hero_btn1:'Hablar con Ergy',hero_btn2:'Guías de Primeros Auxilios',
+    card_title:'Consulta con Ergy AI',card_sub:'Triage multiespecialidad. Diseñado para zonas con acceso médico limitado.',card_btn:'Consultar Ahora',
+    spec1:'Cardiología',spec2:'Trauma',spec3:'Pediatría',spec4:'Toxicología',
+    gems_eyebrow:'Sinergia',gems_title:'Gems Activos',
+    gem1_title:'Chat con Ergy',gem1_sub:'Consulta síntomas, dosis y procedimientos en tiempo real.',
+    gem2_title:'Signos Vitales',gem2_sub:'Ingresa los valores del paciente para interpretación inmediata.',
+    gem3_title:'Primeros Auxilios',gem3_sub:'RCP, hemorragia, asfixia, quemaduras — paso a paso.',
+    fa_eyebrow:'Protocolos de Emergencia',fa_title:'Guías de Primeros Auxilios',fa_sub:'Paso a paso para las emergencias más críticas. Funciona sin internet.',
+    tab1:'RCP',tab2:'Control de sangrado',tab3:'Asfixia',tab4:'Quemaduras',fa_ergy_btn:'Guía en tiempo real con Ergy',
+    cpr1_t:'Verifica respuesta',cpr1_d:'Sacude los hombros y llama en voz alta. Si no responde, llama a emergencias.',
+    cpr2_t:'Ritmo de compresiones',cpr2_d:'100–120 por minuto. Presiona fuerte — mínimo 5 cm en el centro del pecho.',
+    cpr3_t:'Respiraciones de rescate',cpr3_d:'30 compresiones → 2 respiraciones. Inclina la cabeza, levanta el mentón.',
+    cpr4_t:'No te detengas',cpr4_d:'Continúa hasta que llegue ayuda o el paciente recupere pulso.',cpr_bpm:'110 lpm',
+    bl1_t:'Protégete primero',bl1_d:'Usa guantes o bolsa plástica antes de tocar sangre.',
+    bl2_t:'Presión directa y firme',bl2_d:'Presiona con tela limpia. No levantes — agrega otro paño si se empapa.',
+    bl3_t:'Eleva la extremidad',bl3_d:'Levanta la herida por encima del corazón si es posible.',
+    bl4_t:'Torniquete (último recurso)',bl4_d:'5–7 cm sobre la herida, aprieta hasta detenerlo. Anota la hora.',
+    ch1_t:'Confirma la asfixia',ch1_d:'¿Te estás ahogando? Si no puede hablar ni respirar — actúa.',
+    ch2_t:'5 golpes en la espalda',ch2_d:'Inclínalo hacia adelante. Golpea firme entre los omóplatos.',
+    ch3_t:'5 compresiones abdominales (Heimlich)',ch3_d:'Párate detrás. Puño encima del ombligo, jala hacia adentro y arriba.',
+    ch4_t:'Si pierde el conocimiento',ch4_d:'Bájalo al suelo, inicia RCP. Revisa la boca antes de cada respiración.',
+    bu1_t:'Enfría la quemadura',bu1_d:'Agua fresca (no fría) durante 10–20 minutos. Nunca hielo.',
+    bu2_t:'Retira lo que apriete',bu2_d:'Quita joyas y ropa cerca de la quemadura antes de que inflame.',
+    bu3_t:'Cubre con cuidado',bu3_d:'Gasa limpia. No revientes ampollas. Nada de mantequilla ni pasta dental.',
+    bu4_t:'Atención urgente si:',bu4_d:'Cara, manos, pies, genitales o articulaciones. Cualquier quemadura en niños.',
+    mode_general:'General',mode_emergency:'Emergencia',mode_vitals:'Vitales',
+    chip_label:'Síntomas rápidos:',chip1:'Dolor en el pecho',chip2:'Sin pulso',chip3:'No respira',chip4:'Sangrado grave',chip5:'Inconsciente',chip6:'Fiebre +39°C',chip7:'Convulsiones',chip8:'Dificultad para respirar',chip9:'Trauma / Caída',chip10:'Quemadura',chip11:'Paciente niño',chip12:'Embarazo',chip13:'Mordedura / Veneno',
+    chat_placeholder:'Describe la situación del paciente…',
+    vitals_intro:'Ingresa los valores del paciente. Ergy señalará lecturas anormales.',
+    v_hr:'Frecuencia cardíaca (lpm)',v_temp:'Temperatura (°C)',v_bp:'Presión arterial (mmHg)',v_spo2:'Saturación O₂ (%)',v_age:'Edad',v_sex:'Sexo',v_sex_sel:'Seleccionar',v_sex_m:'Masculino',v_sex_f:'Femenino',
+    v_notes:'Condiciones conocidas / alergias',v_notes_ph:'Ej: diabético, alérgico a penicilina…',vitals_btn:'Evaluar con Ergy',
+    footer_desc:'Salud de emergencia con IA para Venezuela y comunidades sin acceso médico.',footer_general:'Consulta general',footer_emergency:'Emergencia',footer_vitals:'Signos vitales',footer_legal_title:'Legal',footer_terms:'Términos de Uso',footer_privacy:'Privacidad',
+    footer_copy:'© 2026 CDxGems. Ergy AI es una herramienta de apoyo clínico — no reemplaza la atención médica profesional.',
+    ergy_status_general:'Asistente clínico multiespecialidad',ergy_status_emergency:'🔴 Modo emergencia activo',ergy_status_vitals:'Interpretación de signos vitales',
+    welcome_general:'Hola. Soy Ergy, tu asistente clínico con IA. Puedo ayudarte a evaluar síntomas, guiarte en procedimientos y darte apoyo multiespecialidad. ¿Cuál es la situación del paciente?',
+    welcome_emergency:'⚠️ Modo emergencia activo. Descríbeme la emergencia ahora — ¿qué está pasando con el paciente? Te daré instrucciones inmediatas.',
+    thinking:'Evaluando…',no_conn:'Sin conexión. Usa los protocolos de primeros auxilios de la página principal.',no_vitals:'Por favor ingresa al menos un signo vital.',analyzing:'Analizando signos vitales…',vitals_offline:'Sin conexión. Referencia normal: FC 60–100 lpm, Temp 36–37.5°C, PA 90/60–120/80, SpO₂ ≥95%.',
+    chip_prefix:'Síntomas del paciente: ',vitals_summary:'Evalúa estos signos vitales: ',
+    system_general:`Eres Ergy, asistente clínico con IA para CDxGems. Asistes a pacientes, familiares, paramédicos y médicos remotos en zonas con acceso médico limitado. Siempre: (1) indica el nivel de urgencia, (2) da acciones inmediatas paso a paso, (3) señala cuándo se necesita atención presencial. Responde en español. Sé claro, directo y cálido. Máximo 140 palabras.`,
+    system_emergency:`Eres Ergy en MODO EMERGENCIA. Una vida puede estar en riesgo. Responde DE INMEDIATO con: NIVEL DE URGENCIA (Crítico/Alto/Moderado), luego ACCIONES INMEDIATAS numeradas. Sé directo y preciso. Incluye qué NO hacer. Responde en español. Máximo 130 palabras.`,
+    system_vitals:`Eres Ergy analizando signos vitales. Para cada valor indica si es normal, limítrofe o crítico. Da evaluación global y acciones inmediatas. Responde en español. Máximo 150 palabras.`
+  },
+  en:{flag:'🇺🇸',code:'EN',dir:'ltr',
+    nav_consult:'Consultation',nav_firstaid:'First Aid',nav_emergency:'Emergency',
+    banner_title:'Active Emergency Protocol',banner_sub:'Immediate AI triage — works with limited connectivity.',banner_btn:'START PROTOCOL',
+    hero_badge:'Ergy: Your Clinical AI Partner',
+    hero_h1:'Precision Care,<br><span class="font-extrabold italic text-gem-teal">Powered by Ergy.</span>',
+    hero_sub:'Multi-specialty AI triage for emergencies and remote clinical support — built for Venezuela and communities without sufficient medical access.',
+    hero_btn1:'Chat with Ergy',hero_btn2:'First Aid Guides',
+    card_title:'Consult Ergy AI',card_sub:'Multi-specialty triage. Designed for areas with limited medical access.',card_btn:'Consult Now',
+    spec1:'Cardiology',spec2:'Trauma',spec3:'Pediatrics',spec4:'Toxicology',
+    gems_eyebrow:'Synergy',gems_title:'Active Gems',
+    gem1_title:'Chat with Ergy',gem1_sub:'Consult symptoms, dosage and procedures in real time.',
+    gem2_title:'Vital Signs',gem2_sub:'Enter patient values for immediate AI interpretation.',
+    gem3_title:'First Aid',gem3_sub:'CPR, hemorrhage, choking, burns — step by step.',
+    fa_eyebrow:'Emergency Protocols',fa_title:'First Aid Guides',fa_sub:'Step-by-step for the most critical emergencies. Works offline. Share this page.',
+    tab1:'CPR',tab2:'Bleeding control',tab3:'Choking',tab4:'Burns',fa_ergy_btn:'Get live guidance from Ergy',
+    cpr1_t:'Check responsiveness',cpr1_d:'Tap shoulders and shout. If no response, call emergency services immediately.',
+    cpr2_t:'Compression rhythm',cpr2_d:'100–120 compressions per minute. Press hard — at least 5 cm deep in center of chest.',
+    cpr3_t:'Rescue breaths (if trained)',cpr3_d:'30 compressions → 2 breaths. Tilt head, lift chin, seal mouth.',
+    cpr4_t:'Do not stop',cpr4_d:'Continue until help arrives or the patient regains pulse and breathing.',cpr_bpm:'110 bpm',
+    bl1_t:'Protect yourself first',bl1_d:'Use gloves or a plastic bag before touching blood.',
+    bl2_t:'Apply direct pressure',bl2_d:'Press firmly with clean cloth. Do not lift — add more cloth if soaked.',
+    bl3_t:'Elevate the limb',bl3_d:'Raise the wound above heart level if possible.',
+    bl4_t:'Tourniquet (last resort)',bl4_d:'5–7 cm above the wound, tighten until bleeding stops. Note the time.',
+    ch1_t:'Confirm choking',ch1_d:'"Are you choking?" If they cannot speak, cough, or breathe — act immediately.',
+    ch2_t:'5 back blows',ch2_d:'Lean them forward. Strike firmly between shoulder blades with heel of hand.',
+    ch3_t:'5 abdominal thrusts (Heimlich)',ch3_d:'Stand behind. Fist above navel, other hand over fist. Pull sharply inward and upward.',
+    ch4_t:'If unconscious',ch4_d:'Lower to ground, begin CPR. Check mouth before each breath.',
+    bu1_t:'Cool the burn',bu1_d:'Run cool (not cold) water for 10–20 minutes. Never use ice.',
+    bu2_t:'Remove constrictions',bu2_d:'Remove jewelry and clothing near the burn before swelling begins.',
+    bu3_t:'Cover loosely',bu3_d:'Use clean gauze. Do not burst blisters. No butter or toothpaste.',
+    bu4_t:'Seek urgent care if:',bu4_d:'Burns on face, hands, feet, genitals, or joints. Any burn in children.',
+    mode_general:'General',mode_emergency:'Emergency',mode_vitals:'Vitals',
+    chip_label:'Quick symptoms:',chip1:'Chest pain',chip2:'No pulse',chip3:'Not breathing',chip4:'Heavy bleeding',chip5:'Unconscious',chip6:'Fever +39°C',chip7:'Seizure',chip8:'Difficulty breathing',chip9:'Trauma / Fall',chip10:'Burn',chip11:'Child patient',chip12:'Pregnancy',chip13:'Bite / Poison',
+    chat_placeholder:'Describe the patient\'s situation…',
+    vitals_intro:'Enter the patient\'s values. Ergy will flag abnormal readings and suggest immediate actions.',
+    v_hr:'Heart rate (bpm)',v_temp:'Temperature (°C)',v_bp:'Blood pressure (mmHg)',v_spo2:'O₂ Saturation (%)',v_age:'Age',v_sex:'Sex',v_sex_sel:'Select',v_sex_m:'Male',v_sex_f:'Female',
+    v_notes:'Known conditions / allergies',v_notes_ph:'E.g. diabetic, allergic to penicillin…',vitals_btn:'Evaluate with Ergy',
+    footer_desc:'Emergency AI healthcare for Venezuela and communities without sufficient medical access.',footer_general:'General consultation',footer_emergency:'Emergency',footer_vitals:'Vital signs',footer_legal_title:'Legal',footer_terms:'Terms of Use',footer_privacy:'Privacy',
+    footer_copy:'© 2026 CDxGems. Ergy AI is a clinical support tool — not a substitute for professional medical care.',
+    ergy_status_general:'Multi-specialty clinical assistant',ergy_status_emergency:'🔴 Emergency mode active',ergy_status_vitals:'Vital signs interpretation',
+    welcome_general:'Hello. I\'m Ergy, your clinical AI assistant. I can help assess symptoms, guide you through procedures, and provide multi-specialty support. What is the patient\'s situation?',
+    welcome_emergency:'⚠️ Emergency mode active. Describe the emergency now — what is happening with the patient? I will give you immediate step-by-step instructions.',
+    thinking:'Evaluating…',no_conn:'No connection. Use the first aid protocols on the main page.',no_vitals:'Please enter at least one vital sign.',analyzing:'Analyzing vital signs…',vitals_offline:'Offline. Normal ranges: HR 60–100 bpm, Temp 36–37.5°C, BP 90/60–120/80, SpO₂ ≥95%.',
+    chip_prefix:'Patient symptoms: ',vitals_summary:'Evaluate these patient vitals: ',
+    system_general:`You are Ergy, a clinical AI assistant for CDxGems. You assist patients, caregivers, paramedics, and remote doctors in areas with limited medical access. Always: (1) state urgency level, (2) give immediate step-by-step actions, (3) indicate when in-person care is needed. Respond in English. Be clear, direct, and warm. Max 140 words.`,
+    system_emergency:`You are Ergy in EMERGENCY MODE. A life may be at risk. Respond IMMEDIATELY with: URGENCY LEVEL (Critical/High/Moderate), then IMMEDIATE ACTIONS numbered step by step. Be direct and precise. Include what NOT to do. Respond in English. Max 130 words.`,
+    system_vitals:`You are Ergy analyzing patient vitals. For each value state if normal, borderline, or critical. Give overall assessment and immediate actions. Respond in English. Max 150 words.`
+  },
+  pt:{flag:'🇧🇷',code:'PT',dir:'ltr',
+    nav_consult:'Consulta',nav_firstaid:'Primeiros Socorros',nav_emergency:'Emergência',
+    banner_title:'Protocolo de Emergência Ativo',banner_sub:'Triagem imediata com IA — funciona com conectividade limitada.',banner_btn:'INICIAR PROTOCOLO',
+    hero_badge:'Ergy: Seu Assistente Clínico com IA',
+    hero_h1:'Cuidado Preciso,<br><span class="font-extrabold italic text-gem-teal">Impulsado por Ergy.</span>',
+    hero_sub:'Triagem multiespecialidade com IA para emergências e suporte clínico remoto — para comunidades sem acesso médico suficiente.',
+    hero_btn1:'Falar com Ergy',hero_btn2:'Guias de Primeiros Socorros',
+    card_title:'Consulte o Ergy AI',card_sub:'Triagem multiespecialidade. Para zonas com acesso médico limitado.',card_btn:'Consultar Agora',
+    spec1:'Cardiologia',spec2:'Trauma',spec3:'Pediatria',spec4:'Toxicologia',
+    gems_eyebrow:'Sinergia',gems_title:'Gems Ativos',
+    gem1_title:'Chat com Ergy',gem1_sub:'Consulte sintomas, dosagens e procedimentos em tempo real.',
+    gem2_title:'Sinais Vitais',gem2_sub:'Insira os valores do paciente para interpretação imediata.',
+    gem3_title:'Primeiros Socorros',gem3_sub:'RCP, hemorragia, asfixia, queimaduras — passo a passo.',
+    fa_eyebrow:'Protocolos de Emergência',fa_title:'Guias de Primeiros Socorros',fa_sub:'Passo a passo para as emergências mais críticas. Funciona sem internet.',
+    tab1:'RCP',tab2:'Controle de sangramento',tab3:'Asfixia',tab4:'Queimaduras',fa_ergy_btn:'Orientação em tempo real com Ergy',
+    cpr1_t:'Verifique a resposta',cpr1_d:'Sacuda os ombros e chame em voz alta. Se não responder, ligue para emergências.',
+    cpr2_t:'Ritmo de compressões',cpr2_d:'100–120 por minuto. Pressione fundo — mínimo 5 cm no centro do peito.',
+    cpr3_t:'Respirações de resgate',cpr3_d:'30 compressões → 2 respirações. Incline a cabeça, levante o queixo.',
+    cpr4_t:'Não pare',cpr4_d:'Continue até a chegada de ajuda ou o paciente recuperar pulso.',cpr_bpm:'110 bpm',
+    bl1_t:'Proteja-se primeiro',bl1_d:'Use luvas ou saco plástico antes de tocar em sangue.',
+    bl2_t:'Pressão direta e firme',bl2_d:'Pressione com pano limpo. Não levante — adicione mais pano se ensopar.',
+    bl3_t:'Eleve o membro',bl3_d:'Levante o ferimento acima do nível do coração se possível.',
+    bl4_t:'Torniquete (último recurso)',bl4_d:'5–7 cm acima do ferimento, aperte até parar. Anote a hora.',
+    ch1_t:'Confirme a asfixia',ch1_d:'"Está se engasgando?" Se não consegue falar nem respirar — aja.',
+    ch2_t:'5 pancadas nas costas',ch2_d:'Incline para frente. Bata firme entre as omoplatas com o calcanhar da mão.',
+    ch3_t:'5 compressões abdominais (Heimlich)',ch3_d:'Fique atrás. Punho acima do umbigo, puxe para dentro e para cima.',
+    ch4_t:'Se perder consciência',ch4_d:'Deite no chão, inicie RCP. Verifique a boca antes de cada respiração.',
+    bu1_t:'Resfrie a queimadura',bu1_d:'Água fria (não gelada) por 10–20 minutos. Nunca gelo.',
+    bu2_t:'Retire o que apertar',bu2_d:'Tire joias e roupas perto da queimadura antes de inchar.',
+    bu3_t:'Cubra com cuidado',bu3_d:'Gaze limpa. Não estoure bolhas. Nada de manteiga ou pasta de dente.',
+    bu4_t:'Atenção urgente se:',bu4_d:'Rosto, mãos, pés, genitais ou articulações. Qualquer queimadura em crianças.',
+    mode_general:'Geral',mode_emergency:'Emergência',mode_vitals:'Sinais Vitais',
+    chip_label:'Sintomas rápidos:',chip1:'Dor no peito',chip2:'Sem pulso',chip3:'Não respira',chip4:'Sangramento grave',chip5:'Inconsciente',chip6:'Febre +39°C',chip7:'Convulsão',chip8:'Dificuldade para respirar',chip9:'Trauma / Queda',chip10:'Queimadura',chip11:'Criança',chip12:'Gravidez',chip13:'Mordida / Veneno',
+    chat_placeholder:'Descreva a situação do paciente…',
+    vitals_intro:'Insira os valores do paciente. Ergy identificará leituras anormais.',
+    v_hr:'Frequência cardíaca (bpm)',v_temp:'Temperatura (°C)',v_bp:'Pressão arterial (mmHg)',v_spo2:'Saturação O₂ (%)',v_age:'Idade',v_sex:'Sexo',v_sex_sel:'Selecionar',v_sex_m:'Masculino',v_sex_f:'Feminino',
+    v_notes:'Condições conhecidas / alergias',v_notes_ph:'Ex: diabético, alérgico à penicilina…',vitals_btn:'Avaliar com Ergy',
+    footer_desc:'Saúde de emergência com IA para comunidades sem acesso médico suficiente.',footer_general:'Consulta geral',footer_emergency:'Emergência',footer_vitals:'Sinais vitais',footer_legal_title:'Legal',footer_terms:'Termos de Uso',footer_privacy:'Privacidade',
+    footer_copy:'© 2026 CDxGems. Ergy AI é uma ferramenta de suporte clínico — não substitui o atendimento médico profissional.',
+    ergy_status_general:'Assistente clínico multiespecialidade',ergy_status_emergency:'🔴 Modo emergência ativo',ergy_status_vitals:'Interpretação de sinais vitais',
+    welcome_general:'Olá. Sou Ergy, seu assistente clínico com IA. Posso ajudar a avaliar sintomas, orientar procedimentos e dar suporte multiespecialidade. Qual é a situação do paciente?',
+    welcome_emergency:'⚠️ Modo emergência ativo. Descreva a emergência agora — o que está acontecendo com o paciente? Darei instruções imediatas.',
+    thinking:'Avaliando…',no_conn:'Sem conexão. Use os protocolos de primeiros socorros na página principal.',no_vitals:'Por favor insira pelo menos um sinal vital.',analyzing:'Analisando sinais vitais…',vitals_offline:'Sem conexão. Referência normal: FC 60–100 bpm, Temp 36–37.5°C, PA 90/60–120/80, SpO₂ ≥95%.',
+    chip_prefix:'Sintomas do paciente: ',vitals_summary:'Avalie estes sinais vitais: ',
+    system_general:`Você é Ergy, assistente clínico com IA para CDxGems. Auxilia pacientes, cuidadores, paramédicos e médicos remotos em zonas com acesso médico limitado. Sempre: (1) indique o nível de urgência, (2) dê ações imediatas passo a passo, (3) indique quando é necessário atendimento presencial. Responda em português. Máximo 140 palavras.`,
+    system_emergency:`Você é Ergy em MODO EMERGÊNCIA. Uma vida pode estar em risco. Responda IMEDIATAMENTE com: NÍVEL DE URGÊNCIA (Crítico/Alto/Moderado), depois AÇÕES IMEDIATAS numeradas. Seja direto e preciso. Responda em português. Máximo 130 palavras.`,
+    system_vitals:`Você é Ergy analisando sinais vitais. Para cada valor indique se é normal, limítrofe ou crítico. Dê avaliação global e ações imediatas. Responda em português. Máximo 150 palavras.`
+  },
+  fr:{flag:'🇫🇷',code:'FR',dir:'ltr',
+    nav_consult:'Consultation',nav_firstaid:'Premiers Secours',nav_emergency:'Urgence',
+    banner_title:'Protocole d\'Urgence Actif',banner_sub:'Triage immédiat par IA — fonctionne avec une connectivité limitée.',banner_btn:'DÉMARRER LE PROTOCOLE',
+    hero_badge:'Ergy: Votre Assistant Clinique IA',
+    hero_h1:'Soins Précis,<br><span class="font-extrabold italic text-gem-teal">Propulsés par Ergy.</span>',
+    hero_sub:'Triage multispécialité par IA pour les urgences et le soutien clinique à distance.',
+    hero_btn1:'Parler à Ergy',hero_btn2:'Guides de Premiers Secours',
+    card_title:'Consulter Ergy AI',card_sub:'Triage multispécialité. Conçu pour les zones à accès médical limité.',card_btn:'Consulter Maintenant',
+    spec1:'Cardiologie',spec2:'Trauma',spec3:'Pédiatrie',spec4:'Toxicologie',
+    gems_eyebrow:'Synergie',gems_title:'Gems Actifs',
+    gem1_title:'Chat avec Ergy',gem1_sub:'Consultez symptômes, dosages et procédures en temps réel.',
+    gem2_title:'Signes Vitaux',gem2_sub:'Entrez les valeurs du patient pour une interprétation immédiate.',
+    gem3_title:'Premiers Secours',gem3_sub:'RCP, hémorragie, étouffement, brûlures — étape par étape.',
+    fa_eyebrow:'Protocoles d\'Urgence',fa_title:'Guides de Premiers Secours',fa_sub:'Étape par étape pour les urgences les plus critiques. Fonctionne hors ligne.',
+    tab1:'RCP',tab2:'Contrôle du saignement',tab3:'Étouffement',tab4:'Brûlures',fa_ergy_btn:'Guidance en direct avec Ergy',
+    cpr1_t:'Vérifiez la réponse',cpr1_d:'Tapez les épaules et appelez. Si pas de réponse, appelez les secours.',
+    cpr2_t:'Rythme des compressions',cpr2_d:'100–120 par minute. Appuyez fort — au moins 5 cm au centre de la poitrine.',
+    cpr3_t:'Insufflations (si formé)',cpr3_d:'30 compressions → 2 insufflations. Inclinez la tête, soulevez le menton.',
+    cpr4_t:'Ne vous arrêtez pas',cpr4_d:'Continuez jusqu\'à l\'arrivée des secours ou la reprise du pouls.',cpr_bpm:'110 bpm',
+    bl1_t:'Protégez-vous d\'abord',bl1_d:'Utilisez des gants ou un sac plastique avant de toucher le sang.',
+    bl2_t:'Pression directe et ferme',bl2_d:'Appuyez avec un linge propre. N\'enlevez pas — ajoutez un autre si imbibé.',
+    bl3_t:'Élevez le membre',bl3_d:'Surélevez la blessure au-dessus du cœur si possible.',
+    bl4_t:'Garrot (dernier recours)',bl4_d:'5–7 cm au-dessus de la plaie, serrez jusqu\'à l\'arrêt. Notez l\'heure.',
+    ch1_t:'Confirmez l\'étouffement',ch1_d:'"Vous étouffez?" Si ne peut pas parler ni respirer — agissez.',
+    ch2_t:'5 tapes dans le dos',ch2_d:'Penchez-le en avant. Frappez fermement entre les omoplates.',
+    ch3_t:'5 compressions abdominales (Heimlich)',ch3_d:'Derrière lui, poing au-dessus du nombril, tirez vers l\'intérieur et le haut.',
+    ch4_t:'Si perte de connaissance',ch4_d:'Allongez au sol, commencez la RCP. Vérifiez la bouche avant chaque insufflation.',
+    bu1_t:'Refroidissez la brûlure',bu1_d:'Eau fraîche (pas froide) pendant 10–20 minutes. Jamais de glace.',
+    bu2_t:'Retirez ce qui serre',bu2_d:'Enlevez bijoux et vêtements près de la brûlure avant le gonflement.',
+    bu3_t:'Couvrez délicatement',bu3_d:'Compresse propre. Ne percez pas les cloques. Pas de beurre ni dentifrice.',
+    bu4_t:'Soins urgents si:',bu4_d:'Visage, mains, pieds, organes génitaux. Toute brûlure chez un enfant.',
+    mode_general:'Général',mode_emergency:'Urgence',mode_vitals:'Signes Vitaux',
+    chip_label:'Symptômes rapides:',chip1:'Douleur thoracique',chip2:'Pas de pouls',chip3:'Ne respire pas',chip4:'Saignement grave',chip5:'Inconscient',chip6:'Fièvre +39°C',chip7:'Convulsions',chip8:'Difficultés respiratoires',chip9:'Trauma / Chute',chip10:'Brûlure',chip11:'Enfant',chip12:'Grossesse',chip13:'Morsure / Poison',
+    chat_placeholder:'Décrivez la situation du patient…',
+    vitals_intro:'Entrez les valeurs du patient. Ergy signalera les lectures anormales.',
+    v_hr:'Fréquence cardiaque (bpm)',v_temp:'Température (°C)',v_bp:'Pression artérielle (mmHg)',v_spo2:'Saturation O₂ (%)',v_age:'Âge',v_sex:'Sexe',v_sex_sel:'Sélectionner',v_sex_m:'Masculin',v_sex_f:'Féminin',
+    v_notes:'Conditions connues / allergies',v_notes_ph:'Ex: diabétique, allergique à la pénicilline…',vitals_btn:'Évaluer avec Ergy',
+    footer_desc:'Santé d\'urgence par IA pour les communautés sans accès médical suffisant.',footer_general:'Consultation générale',footer_emergency:'Urgence',footer_vitals:'Signes vitaux',footer_legal_title:'Légal',footer_terms:'Conditions d\'Utilisation',footer_privacy:'Confidentialité',
+    footer_copy:'© 2026 CDxGems. Ergy AI est un outil de soutien clinique — ne remplace pas les soins médicaux professionnels.',
+    ergy_status_general:'Assistant clinique multispécialité',ergy_status_emergency:'🔴 Mode urgence actif',ergy_status_vitals:'Interprétation des signes vitaux',
+    welcome_general:'Bonjour. Je suis Ergy, votre assistant clinique IA. Je peux aider à évaluer les symptômes et fournir un soutien multispécialité. Quelle est la situation du patient?',
+    welcome_emergency:'⚠️ Mode urgence actif. Décrivez l\'urgence maintenant — que se passe-t-il avec le patient? Je vous donnerai des instructions immédiates.',
+    thinking:'Évaluation…',no_conn:'Pas de connexion. Utilisez les protocoles de premiers secours sur la page principale.',no_vitals:'Veuillez entrer au moins un signe vital.',analyzing:'Analyse des signes vitaux…',vitals_offline:'Hors ligne. Valeurs normales: FC 60–100 bpm, Temp 36–37.5°C, TA 90/60–120/80, SpO₂ ≥95%.',
+    chip_prefix:'Symptômes du patient: ',vitals_summary:'Évaluez ces signes vitaux: ',
+    system_general:`Vous êtes Ergy, assistant clinique IA pour CDxGems. Vous aidez patients, soignants, paramédicaux et médecins à distance dans des zones à accès médical limité. Toujours: (1) indiquez le niveau d'urgence, (2) donnez des actions immédiates étape par étape, (3) indiquez quand une consultation est nécessaire. Répondez en français. Maximum 140 mots.`,
+    system_emergency:`Vous êtes Ergy en MODE URGENCE. Une vie peut être en danger. Répondez IMMÉDIATEMENT avec: NIVEAU D'URGENCE (Critique/Élevé/Modéré), puis ACTIONS IMMÉDIATES numérotées. Soyez direct et précis. Répondez en français. Maximum 130 mots.`,
+    system_vitals:`Vous êtes Ergy analysant les signes vitaux. Pour chaque valeur indiquez si normale, limite ou critique. Donnez évaluation globale et actions immédiates. Répondez en français. Maximum 150 mots.`
+  },
+  zh:{flag:'🇨🇳',code:'ZH',dir:'ltr',
+    nav_consult:'问诊',nav_firstaid:'急救指南',nav_emergency:'紧急求助',
+    banner_title:'紧急协议激活中',banner_sub:'AI即时分诊 — 低网络连接下同样可用。',banner_btn:'启动协议',
+    hero_badge:'Ergy：您的临床AI助手',
+    hero_h1:'精准医疗，<br><span class="font-extrabold italic text-gem-teal">由Ergy驱动。</span>',
+    hero_sub:'多专科AI分诊，为紧急情况提供远程临床支持 — 专为医疗资源匮乏的社区设计。',
+    hero_btn1:'与Ergy对话',hero_btn2:'急救指南',
+    card_title:'咨询Ergy AI',card_sub:'多专科分诊。专为医疗条件有限地区设计。',card_btn:'立即咨询',
+    spec1:'心脏病学',spec2:'创伤',spec3:'儿科',spec4:'毒理学',
+    gems_eyebrow:'协同',gems_title:'活跃功能',
+    gem1_title:'与Ergy聊天',gem1_sub:'实时咨询症状、剂量和诊疗程序。',
+    gem2_title:'生命体征',gem2_sub:'输入患者数值获取即时AI解读。',
+    gem3_title:'急救',gem3_sub:'心肺复苏、止血、窒息、烧伤 — 逐步指导。',
+    fa_eyebrow:'紧急协议',fa_title:'急救指南',fa_sub:'针对最危急情况的逐步指导。离线可用。请分享此页面。',
+    tab1:'心肺复苏',tab2:'止血',tab3:'窒息',tab4:'烧伤',fa_ergy_btn:'获取Ergy实时指导',
+    cpr1_t:'检查反应',cpr1_d:'轻拍肩膀并大声呼叫。若无反应，立即拨打急救电话。',
+    cpr2_t:'按压节奏',cpr2_d:'每分钟100–120次。用力按压 — 胸部中央至少5厘米深。',
+    cpr3_t:'人工呼吸（如受过训练）',cpr3_d:'30次按压 → 2次呼吸。仰头抬颌，封住嘴巴。',
+    cpr4_t:'不要停止',cpr4_d:'持续操作直到救援人员到达或患者恢复脉搏。',cpr_bpm:'110 次/分',
+    bl1_t:'先保护自己',bl1_d:'接触血液前使用手套或塑料袋。',
+    bl2_t:'直接施压',bl2_d:'用干净布料用力按压。不要移开 — 如渗血则再加一块布。',
+    bl3_t:'抬高肢体',bl3_d:'如可能，将伤口抬至心脏水平以上。',
+    bl4_t:'止血带（最后手段）',bl4_d:'伤口上方5–7厘米处，扎紧直到出血停止。记录时间。',
+    ch1_t:'确认窒息',ch1_d:'"您在窒息吗？"若无法说话、咳嗽或呼吸 — 立即行动。',
+    ch2_t:'背部拍击5次',ch2_d:'让其前倾，用手掌根部用力拍击肩胛骨之间。',
+    ch3_t:'腹部冲击5次（海姆立克法）',ch3_d:'站在其身后，拳头置于肚脐上方，向内向上猛推。',
+    ch4_t:'若失去意识',ch4_d:'扶至地面，开始心肺复苏。每次呼吸前检查口腔。',
+    bu1_t:'冷却烧伤部位',bu1_d:'用凉水（不是冰水）冲洗10–20分钟。禁止用冰块。',
+    bu2_t:'移除束缚物',bu2_d:'在肿胀前摘除烧伤部位附近的首饰和衣物。',
+    bu3_t:'轻轻覆盖',bu3_d:'使用干净纱布。不要刺破水泡。不要涂黄油或牙膏。',
+    bu4_t:'以下情况需紧急就医：',bu4_d:'面部、手、脚、生殖器或关节烧伤。儿童任何烧伤。',
+    mode_general:'普通',mode_emergency:'紧急',mode_vitals:'生命体征',
+    chip_label:'快速症状：',chip1:'胸痛',chip2:'无脉搏',chip3:'停止呼吸',chip4:'严重出血',chip5:'失去意识',chip6:'发烧+39°C',chip7:'抽搐',chip8:'呼吸困难',chip9:'外伤/跌倒',chip10:'烧伤',chip11:'儿童患者',chip12:'怀孕',chip13:'咬伤/中毒',
+    chat_placeholder:'描述患者的情况…',
+    vitals_intro:'输入患者数值。Ergy将标记异常读数并建议立即采取的行动。',
+    v_hr:'心率（次/分）',v_temp:'体温（°C）',v_bp:'血压（mmHg）',v_spo2:'血氧饱和度（%）',v_age:'年龄',v_sex:'性别',v_sex_sel:'选择',v_sex_m:'男',v_sex_f:'女',
+    v_notes:'已知病症/过敏',v_notes_ph:'如：糖尿病患者，对青霉素过敏…',vitals_btn:'用Ergy评估',
+    footer_desc:'为医疗资源匮乏社区提供AI紧急医疗服务。',footer_general:'普通咨询',footer_emergency:'紧急',footer_vitals:'生命体征',footer_legal_title:'法律',footer_terms:'使用条款',footer_privacy:'隐私政策',
+    footer_copy:'© 2026 CDxGems. Ergy AI是临床支持工具 — 不能替代专业医疗服务。',
+    ergy_status_general:'多专科临床助手',ergy_status_emergency:'🔴 紧急模式已激活',ergy_status_vitals:'生命体征解读',
+    welcome_general:'您好。我是Ergy，您的临床AI助手。我可以帮助评估症状、指导操作程序，提供多专科支持。患者目前的情况是什么？',
+    welcome_emergency:'⚠️ 紧急模式已激活。请立即描述紧急情况 — 患者发生了什么？我将给出即时的逐步指导。',
+    thinking:'评估中…',no_conn:'无连接。请使用主页上的急救协议。',no_vitals:'请至少输入一项生命体征。',analyzing:'分析生命体征中…',vitals_offline:'离线。正常参考值：心率60–100次/分，体温36–37.5°C，血压90/60–120/80，血氧≥95%。',
+    chip_prefix:'患者症状：',vitals_summary:'评估这些生命体征：',
+    system_general:`你是Ergy，CDxGems的临床AI助手。你为医疗资源有限地区的患者、护理人员、急救人员和远程医生提供支持。始终：(1)说明紧急程度，(2)提供即时的逐步行动，(3)指出何时需要就医。用中文回答。最多140字。`,
+    system_emergency:`你是Ergy，处于紧急模式。生命可能处于危险中。立即回应：紧急程度（危急/高/中），然后是编号的即时行动。简洁准确。用中文回答。最多130字。`,
+    system_vitals:`你是Ergy，正在分析患者生命体征。对每个值说明是否正常、临界或危急。给出总体评估和即时行动建议。用中文回答。最多150字。`
+  }
+};
+
+// ===================== LANGUAGE ENGINE =====================
+let lang = 'es';
+
+function setLang(l) {
+  lang = l;
+  const t = T[l];
+  document.documentElement.lang = l;
+  document.getElementById('currentFlag').textContent = t.flag;
+  document.getElementById('currentLang').textContent = t.code;
+  // Update all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  // Placeholders
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (t[key]) el.placeholder = t[key];
+  });
+  // Select options
+  const sexSel = document.getElementById('v-sex');
+  if (sexSel) {
+    sexSel.options[0].text = t.v_sex_sel;
+    sexSel.options[1].text = t.v_sex_m;
+    sexSel.options[2].text = t.v_sex_f;
+  }
+  // Update lang menu active state
+  document.querySelectorAll('.lang-opt').forEach(o => o.classList.remove('active'));
+  document.querySelectorAll('.lang-opt').forEach(o => { if(o.getAttribute('onclick').includes("'"+l+"'")) o.classList.add('active'); });
+  // Update modal status if open
+  if (currentMode) {
+    document.getElementById('ergyStatus').textContent = t['ergy_status_'+currentMode];
+    const modeLabels = {general: t.mode_general, emergency: t.mode_emergency, vitals: t.mode_vitals};
+    ['general','emergency','vitals'].forEach(m => {
+      const btn = document.getElementById('mode'+m.charAt(0).toUpperCase()+m.slice(1));
+      if(btn) btn.textContent = modeLabels[m];
+    });
+  }
+  closeLangMenu();
+}
+
+function toggleLangMenu() {
+  document.getElementById('langMenu').classList.toggle('open');
+}
+function closeLangMenu() {
+  document.getElementById('langMenu').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  if (!document.getElementById('langSwitcher').contains(e.target)) closeLangMenu();
+});
+
+// ===================== NAV SCROLL =====================
+window.addEventListener('scroll',()=>{const n=document.getElementById('mainNav');if(window.scrollY>50){n.classList.add('shadow-lg');n.style.paddingTop='8px';n.style.paddingBottom='8px';}else{n.classList.remove('shadow-lg');n.style.paddingTop='';n.style.paddingBottom='';}});
+
+// ===================== PROTOCOL TABS =====================
+const PROTOS=['p1','p2','p3','p4'];
+function showProtocol(id){PROTOS.forEach(p=>{document.getElementById('proto-'+p).classList.add('hidden');document.getElementById('tab-'+p).className='capsule-btn border border-outline-variant text-on-surface-variant text-sm';});document.getElementById('proto-'+id).classList.remove('hidden');document.getElementById('tab-'+id).className='capsule-btn bg-dark-navy text-white text-sm';}
+
+// ===================== ERGY MODAL =====================
+let currentMode='general',history=[];
+
+function openErgy(mode){document.getElementById('ergyModal').classList.add('open');document.body.style.overflow='hidden';setMode(mode);if(history.length===0)showWelcome(mode);}
+function closeErgy(){document.getElementById('ergyModal').classList.remove('open');document.body.style.overflow='';}
+
+function setMode(mode){
+  currentMode=mode;
+  const t=T[lang];
+  ['general','emergency','vitals'].forEach(m=>{
+    const btn=document.getElementById('mode'+m.charAt(0).toUpperCase()+m.slice(1));
+    btn.className=m===mode?'px-3 py-1 rounded-full text-xs font-bold transition-all bg-gem-teal text-dark-navy':'px-3 py-1 rounded-full text-xs font-bold transition-all text-white/50';
+    btn.textContent=t['mode_'+m];
+  });
+  const bar=document.getElementById('symptomBar');
+  bar.style.display=mode==='emergency'?'flex':'none';
+  bar.classList.toggle('flex',mode==='emergency');
+  document.getElementById('chatPanel').classList.toggle('hidden',mode==='vitals');
+  document.getElementById('chatPanel').classList.toggle('flex',mode!=='vitals');
+  document.getElementById('vitalsPanel').classList.toggle('hidden',mode!=='vitals');
+  document.getElementById('ergyStatus').textContent=t['ergy_status_'+mode];
+}
+
+function showWelcome(mode){if(mode!=='vitals'){addBubble('ai',T[lang]['welcome_'+mode]||T[lang].welcome_general);}}
+function addBubble(role,text){const el=document.createElement('div');el.className=role==='ai'?'bubble-ai':'bubble-user';el.textContent=text;const c=document.getElementById('chatMessages');c.appendChild(el);c.scrollTop=c.scrollHeight;}
+function addThinking(){const el=document.createElement('div');el.className='bubble-thinking';el.id='thinkBubble';el.textContent=T[lang].thinking;const c=document.getElementById('chatMessages');c.appendChild(el);c.scrollTop=c.scrollHeight;}
+function removeThinking(){const el=document.getElementById('thinkBubble');if(el)el.remove();}
+
+function addSymptom(chip){
+  chip.classList.toggle('active');
+  const active=[...document.querySelectorAll('.sym-chip.active')].map(c=>c.textContent).join(', ');
+  document.getElementById('chatInput').value=active?T[lang].chip_prefix+active:'';
+}
+
+async function sendMessage(){
+  const t=T[lang];
+  const inp=document.getElementById('chatInput');const text=inp.value.trim();if(!text)return;
+  inp.value='';document.querySelectorAll('.sym-chip').forEach(c=>c.classList.remove('active'));
+  addBubble('user',text);history.push({role:'user',content:text});addThinking();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:t['system_'+currentMode],messages:history})});
+    const data=await res.json();const reply=data.content?.[0]?.text||t.no_conn;
+    removeThinking();addBubble('ai',reply);history.push({role:'assistant',content:reply});
+  }catch(e){removeThinking();addBubble('ai',t.no_conn);}
+}
+
+document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
+
+async function evalVitals(){
+  const t=T[lang];
+  const hr=document.getElementById('v-hr').value,temp=document.getElementById('v-temp').value,bp=document.getElementById('v-bp').value,spo2=document.getElementById('v-spo2').value,age=document.getElementById('v-age').value,sex=document.getElementById('v-sex').value,notes=document.getElementById('v-notes').value;
+  if(!hr&&!temp&&!bp&&!spo2){alert(t.no_vitals);return;}
+  const res=document.getElementById('vitalsResult');res.classList.remove('hidden');res.textContent=t.analyzing;
+  const summary=`${t.v_hr}: ${hr||'—'} | ${t.v_temp}: ${temp||'—'}°C | ${t.v_bp}: ${bp||'—'} | ${t.v_spo2}: ${spo2||'—'}% | ${t.v_age}: ${age||'—'} ${sex} | ${notes||'—'}`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:t.system_vitals,messages:[{role:'user',content:t.vitals_summary+summary}]})});
+    const data=await r.json();res.textContent=data.content?.[0]?.text||t.no_conn;
+  }catch(e){res.textContent=t.vitals_offline;}
+}
+
+document.getElementById('ergyModal').addEventListener('click',e=>{if(e.target===document.getElementById('ergyModal'))closeErgy();});
+</script>
+</body>
+</html>
