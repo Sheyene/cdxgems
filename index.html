@@ -56,13 +56,13 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
       <!-- Language switcher -->
       <div class="relative" id="langSwitcher">
         <button onclick="toggleLangMenu()" class="flex items-center gap-1.5 px-3 py-2 rounded-full border border-outline-variant hover:bg-surface-container-low transition-all text-sm font-bold text-on-surface" id="langBtn">
-          <span id="currentFlag">🇻🇪</span>
-          <span id="currentLang" class="text-xs font-bold">ES</span>
+          <span id="currentFlag">🇺🇸</span>
+          <span id="currentLang" class="text-xs font-bold">EN</span>
           <span class="material-symbols-outlined text-base text-on-surface-variant">expand_more</span>
         </button>
         <div id="langMenu">
-          <div class="lang-opt active" onclick="setLang('es')"><span class="lang-flag">🇻🇪</span>Español</div>
-          <div class="lang-opt" onclick="setLang('en')"><span class="lang-flag">🇺🇸</span>English</div>
+          <div class="lang-opt active" onclick="setLang('en')"><span class="lang-flag">🇺🇸</span>English</div>
+          <div class="lang-opt" onclick="setLang('es')"><span class="lang-flag">🇻🇪</span>Español</div>
           <div class="lang-opt" onclick="setLang('pt')"><span class="lang-flag">🇧🇷</span>Português</div>
           <div class="lang-opt" onclick="setLang('fr')"><span class="lang-flag">🇫🇷</span>Français</div>
           <div class="lang-opt" onclick="setLang('zh')"><span class="lang-flag">🇨🇳</span>中文</div>
@@ -98,10 +98,10 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
       <div class="text-white space-y-8">
         <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full glass-card">
           <span class="material-symbols-outlined text-gem-teal">robot_2</span>
-          <span class="text-[13px] font-bold tracking-widest uppercase" data-i18n="hero_badge">Ergy: Tu Asistente Clínico con IA</span>
+          <span class="text-[13px] font-bold tracking-widest uppercase" data-i18n="hero_badge">Ergy: Your Smart Biomed Support</span>
         </div>
-        <h1 class="font-headline-lg text-5xl md:text-6xl leading-tight" data-i18n="hero_h1">Atención Precisa,<br><span class="font-extrabold italic text-gem-teal">Impulsada por Ergy.</span></h1>
-        <p class="text-body-lg opacity-80 max-w-md" data-i18n="hero_sub">Triage multiespecialidad con IA para emergencias y apoyo clínico remoto — diseñado para Venezuela y comunidades sin acceso médico suficiente.</p>
+        <h1 class="font-headline-lg text-5xl md:text-6xl leading-tight" data-i18n="hero_h1">World-Class Care,<br><span class="font-extrabold italic text-gem-teal">Step-By-Step.</span></h1>
+        <p class="text-body-lg opacity-80 max-w-md" data-i18n="hero_sub">Multi-specialty AI triage for emergencies and remote clinical support — powered by Clinical-Grade Neural Networks.</p>
         <div class="flex flex-wrap gap-4 pt-4">
           <button onclick="openErgy('general')" class="bg-gem-teal text-dark-navy capsule-btn hover:bg-white active:scale-95 flex items-center gap-2 font-bold">
             <span class="material-symbols-outlined">chat</span><span data-i18n="hero_btn1">Hablar con Ergy</span>
@@ -116,8 +116,8 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
           <div class="w-32 h-32 bg-gem-teal/20 rounded-full flex items-center justify-center mb-8">
             <span class="material-symbols-outlined text-6xl text-gem-teal">clinical_notes</span>
           </div>
-          <h2 class="text-2xl font-bold mb-4 text-white" data-i18n="card_title">Consulta con Ergy AI</h2>
-          <p class="text-sm opacity-70 mb-4 text-white" data-i18n="card_sub">Triage multiespecialidad. Diseñado para zonas con acceso médico limitado.</p>
+          <h2 class="text-2xl font-bold mb-4 text-white" data-i18n="card_title">Consult Ergy AI</h2>
+          <p class="text-sm opacity-70 mb-4 text-white" data-i18n="card_sub">Instant clinical support across specialties — connecting lives to world-class expertise, wherever you are.</p>
           <div class="flex gap-2 mb-8 flex-wrap justify-center">
             <span class="bg-white/10 text-white text-xs px-3 py-1 rounded-full" data-i18n="spec1">Cardiología</span>
             <span class="bg-white/10 text-white text-xs px-3 py-1 rounded-full" data-i18n="spec2">Trauma</span>
@@ -138,7 +138,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
   <section class="py-24 bg-surface-container-low overflow-hidden">
     <div class="max-w-[1200px] mx-auto px-4 md:px-16">
       <div class="mb-16">
-        <p class="text-gem-teal font-data-mono text-sm tracking-[0.3em] uppercase mb-4" data-i18n="gems_eyebrow">Sinergia</p>
+        <p class="text-gem-teal font-data-mono text-sm tracking-[0.3em] uppercase mb-4" data-i18n="gems_eyebrow">AI Synergy Guiding You Step-By-Step</p>
         <h2 class="font-headline-lg text-5xl text-dark-navy" data-i18n="gems_title">Gems Activos</h2>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -232,14 +232,63 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
   <!-- Footer -->
   <footer class="bg-dark-navy text-white py-16 border-t border-white/5">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-16 max-w-[1200px] mx-auto">
-      <div><div class="text-white font-headline-md text-2xl mb-6">CDx<span class="text-gem-teal">Gems</span></div><p class="text-white/60 text-sm leading-relaxed" data-i18n="footer_desc">Salud de emergencia con IA para Venezuela y comunidades sin acceso médico suficiente.</p></div>
+      <div>
+        <div class="text-white font-headline-md text-2xl mb-2">CDx<span class="text-gem-teal">Gems</span></div>
+        <p class="text-gem-teal text-xs font-bold tracking-widest uppercase mb-4">Sheyene Gerardi Foundation</p>
+        <p class="text-white/60 text-sm leading-relaxed mb-4" data-i18n="footer_desc">Salud de emergencia con IA para Venezuela y comunidades sin acceso médico suficiente.</p>
+        <p class="text-white/30 text-xs italic">Saving lives, Step-By-Step.</p>
+      </div>
       <div class="flex flex-col gap-4"><h4 class="text-gem-teal font-bold mb-2">Ergy AI</h4><a class="text-white/60 hover:text-white transition-colors text-sm cursor-pointer" onclick="openErgy('general')" data-i18n="footer_general">Consulta general</a><a class="text-white/60 hover:text-white transition-colors text-sm cursor-pointer" onclick="openErgy('emergency')" data-i18n="footer_emergency">Emergencia</a><a class="text-white/60 hover:text-white transition-colors text-sm cursor-pointer" onclick="openErgy('vitals')" data-i18n="footer_vitals">Signos vitales</a></div>
-      <div class="flex flex-col gap-4"><h4 class="text-gem-teal font-bold mb-2" data-i18n="footer_legal_title">Legal</h4><a class="text-white/60 hover:text-white transition-colors text-sm" href="#" data-i18n="footer_terms">Términos de Uso</a><a class="text-white/60 hover:text-white transition-colors text-sm" href="#" data-i18n="footer_privacy">Privacidad</a></div>
+      <div class="flex flex-col gap-4">
+        <h4 class="text-gem-teal font-bold mb-2" data-i18n="footer_legal_title">Legal</h4>
+        <a class="text-white/60 hover:text-white transition-colors text-sm" href="#termsModal" onclick="document.getElementById('termsModal').classList.remove('hidden')" data-i18n="footer_terms">Términos de Uso</a>
+        <a class="text-white/60 hover:text-white transition-colors text-sm" href="#privacyModal" onclick="document.getElementById('privacyModal').classList.remove('hidden')" data-i18n="footer_privacy">Privacidad</a>
+        <p class="text-white/30 text-xs mt-4">A <span class="text-gem-teal font-bold">Sheyene Gerardi Foundation</span> initiative.<br>Unlocking healthcare synergy.</p>
+      </div>
     </div>
     <div class="max-w-[1200px] mx-auto px-4 md:px-16 mt-12 pt-8 border-t border-white/5 text-center">
-      <p class="text-white/40 text-[12px]" data-i18n="footer_copy">© 2026 CDxGems. Ergy AI es una herramienta de apoyo clínico — no reemplaza la atención médica profesional.</p>
+      <p class="text-white/40 text-[12px]" data-i18n="footer_copy">© 2026 CDxGems · Sheyene Gerardi Foundation. Ergy AI es una herramienta de apoyo clínico — no reemplaza la atención médica profesional.</p>
     </div>
   </footer>
+
+  <!-- Terms Modal -->
+  <div id="termsModal" class="hidden fixed inset-0 z-[300] bg-black/70 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 max-h-[80vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-dark-navy">Terms of Use</h2>
+        <button onclick="document.getElementById('termsModal').classList.add('hidden')" class="text-on-surface-variant hover:text-dark-navy"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <div class="text-sm text-on-surface-variant space-y-4 leading-relaxed">
+        <p><strong>CDxGems</strong> is a free emergency medical support tool developed by the <strong>Sheyene Gerardi Foundation</strong>.</p>
+        <p><strong>Not a medical device.</strong> Ergy AI provides general health guidance only. It does not constitute a medical diagnosis, prescription, or professional medical advice. Always seek professional medical care for any health concern.</p>
+        <p><strong>In emergencies,</strong> always contact your local emergency services first. Ergy AI is a support tool, not a replacement for emergency responders.</p>
+        <p><strong>Accuracy.</strong> While Ergy AI strives to provide accurate, evidence-based information, it may not reflect the most current medical guidelines. Use your judgment and consult a professional whenever possible.</p>
+        <p><strong>No liability.</strong> The Sheyene Gerardi Foundation and CDxGems are not liable for any outcomes resulting from use of this application.</p>
+        <p><strong>Free access.</strong> CDxGems is provided free of charge to all users. No data is sold to third parties.</p>
+        <p class="text-xs text-on-surface-variant/60">Last updated: June 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Privacy Modal -->
+  <div id="privacyModal" class="hidden fixed inset-0 z-[300] bg-black/70 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 max-h-[80vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-dark-navy">Privacy Policy</h2>
+        <button onclick="document.getElementById('privacyModal').classList.add('hidden')" class="text-on-surface-variant hover:text-dark-navy"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <div class="text-sm text-on-surface-variant space-y-4 leading-relaxed">
+        <p><strong>CDxGems</strong> is committed to protecting your privacy. This policy explains how we handle information when you use our application.</p>
+        <p><strong>No personal data collected.</strong> CDxGems does not require registration or login. We do not collect, store, or share your name, location, or personal health information.</p>
+        <p><strong>AI conversations.</strong> When you chat with Ergy AI, your messages are sent to Anthropic's API to generate responses. These interactions are governed by Anthropic's privacy policy. We do not store your conversations.</p>
+        <p><strong>Vital signs data.</strong> Any vital signs you enter are processed in real time and are not saved or transmitted beyond the AI response generation.</p>
+        <p><strong>Cookies.</strong> CDxGems does not use tracking cookies or analytics tools.</p>
+        <p><strong>Third parties.</strong> We do not sell or share any user data with third parties.</p>
+        <p><strong>Contact.</strong> For privacy concerns, contact us at contact@sheyene.tech</p>
+        <p class="text-xs text-on-surface-variant/60">Last updated: June 2026 · Sheyene Gerardi Foundation</p>
+      </div>
+    </div>
+  </div>
 </main>
 
 <!-- ERGY MODAL -->
@@ -309,13 +358,13 @@ const T = {
   es:{flag:'🇻🇪',code:'ES',dir:'ltr',
     nav_consult:'Consulta',nav_firstaid:'Primeros Auxilios',nav_emergency:'Emergencia',
     banner_title:'Protocolo de Emergencia Activo',banner_sub:'Triage inmediato con IA — funciona con conectividad limitada.',banner_btn:'INICIAR PROTOCOLO',
-    hero_badge:'Ergy: Tu Asistente Clínico con IA',
-    hero_h1:'Atención Precisa,<br><span class="font-extrabold italic text-gem-teal">Impulsada por Ergy.</span>',
-    hero_sub:'Triage multiespecialidad con IA para emergencias y apoyo clínico remoto — diseñado para Venezuela y comunidades sin acceso médico suficiente.',
+    hero_badge:'Ergy: Tu Apoyo Biomédico Inteligente',
+    hero_h1:'Atención de Clase Mundial,<br><span class="font-extrabold italic text-gem-teal">Paso a Paso.</span>',
+    hero_sub:'Triage multiespecialidad con IA para emergencias y apoyo clínico remoto — impulsada por Redes Neuronales de Grado Clínico.',
     hero_btn1:'Hablar con Ergy',hero_btn2:'Guías de Primeros Auxilios',
-    card_title:'Consulta con Ergy AI',card_sub:'Triage multiespecialidad. Diseñado para zonas con acceso médico limitado.',card_btn:'Consultar Ahora',
+    card_title:'Consulta con Ergy AI',card_sub:'Apoyo clínico instantáneo en todas las especialidades — conectando vidas con experiencia médica de clase mundial, donde estés.',card_btn:'Consultar Ahora',
     spec1:'Cardiología',spec2:'Trauma',spec3:'Pediatría',spec4:'Toxicología',
-    gems_eyebrow:'Sinergia',gems_title:'Gems Activos',
+    gems_eyebrow:'IA Synergy Guiándote Paso a Paso',gems_title:'Gems Activos',
     gem1_title:'Chat con Ergy',gem1_sub:'Consulta síntomas, dosis y procedimientos en tiempo real.',
     gem2_title:'Signos Vitales',gem2_sub:'Ingresa los valores del paciente para interpretación inmediata.',
     gem3_title:'Primeros Auxilios',gem3_sub:'RCP, hemorragia, asfixia, quemaduras — paso a paso.',
@@ -344,7 +393,7 @@ const T = {
     v_hr:'Frecuencia cardíaca (lpm)',v_temp:'Temperatura (°C)',v_bp:'Presión arterial (mmHg)',v_spo2:'Saturación O₂ (%)',v_age:'Edad',v_sex:'Sexo',v_sex_sel:'Seleccionar',v_sex_m:'Masculino',v_sex_f:'Femenino',
     v_notes:'Condiciones conocidas / alergias',v_notes_ph:'Ej: diabético, alérgico a penicilina…',vitals_btn:'Evaluar con Ergy',
     footer_desc:'Salud de emergencia con IA para Venezuela y comunidades sin acceso médico.',footer_general:'Consulta general',footer_emergency:'Emergencia',footer_vitals:'Signos vitales',footer_legal_title:'Legal',footer_terms:'Términos de Uso',footer_privacy:'Privacidad',
-    footer_copy:'© 2026 CDxGems. Ergy AI es una herramienta de apoyo clínico — no reemplaza la atención médica profesional.',
+    footer_copy:'© 2026 CDxGems · Sheyene Gerardi Foundation. Ergy AI es una herramienta de apoyo clínico — no reemplaza la atención médica profesional.',
     ergy_status_general:'Asistente clínico multiespecialidad',ergy_status_emergency:'🔴 Modo emergencia activo',ergy_status_vitals:'Interpretación de signos vitales',
     welcome_general:'Hola. Soy Ergy, tu asistente clínico con IA. Puedo ayudarte a evaluar síntomas, guiarte en procedimientos y darte apoyo multiespecialidad. ¿Cuál es la situación del paciente?',
     welcome_emergency:'⚠️ Modo emergencia activo. Descríbeme la emergencia ahora — ¿qué está pasando con el paciente? Te daré instrucciones inmediatas.',
@@ -357,13 +406,13 @@ const T = {
   en:{flag:'🇺🇸',code:'EN',dir:'ltr',
     nav_consult:'Consultation',nav_firstaid:'First Aid',nav_emergency:'Emergency',
     banner_title:'Active Emergency Protocol',banner_sub:'Immediate AI triage — works with limited connectivity.',banner_btn:'START PROTOCOL',
-    hero_badge:'Ergy: Your Clinical AI Partner',
-    hero_h1:'Precision Care,<br><span class="font-extrabold italic text-gem-teal">Powered by Ergy.</span>',
-    hero_sub:'Multi-specialty AI triage for emergencies and remote clinical support — built for Venezuela and communities without sufficient medical access.',
+    hero_badge:'Ergy: Your Smart Biomed Support',
+    hero_h1:'World-Class Care,<br><span class="font-extrabold italic text-gem-teal">Step-By-Step.</span>',
+    hero_sub:'Multi-specialty AI triage for emergencies and remote clinical support — powered by Clinical-Grade Neural Networks.',
     hero_btn1:'Chat with Ergy',hero_btn2:'First Aid Guides',
-    card_title:'Consult Ergy AI',card_sub:'Multi-specialty triage. Designed for areas with limited medical access.',card_btn:'Consult Now',
+    card_title:'Consult Ergy AI',card_sub:'Instant clinical support across specialties — connecting lives to world-class expertise, wherever you are.',card_btn:'Consult Now',
     spec1:'Cardiology',spec2:'Trauma',spec3:'Pediatrics',spec4:'Toxicology',
-    gems_eyebrow:'Synergy',gems_title:'Active Gems',
+    gems_eyebrow:'AI Synergy Guiding You Step-By-Step',gems_title:'Active Gems',
     gem1_title:'Chat with Ergy',gem1_sub:'Consult symptoms, dosage and procedures in real time.',
     gem2_title:'Vital Signs',gem2_sub:'Enter patient values for immediate AI interpretation.',
     gem3_title:'First Aid',gem3_sub:'CPR, hemorrhage, choking, burns — step by step.',
@@ -405,8 +454,8 @@ const T = {
   pt:{flag:'🇧🇷',code:'PT',dir:'ltr',
     nav_consult:'Consulta',nav_firstaid:'Primeiros Socorros',nav_emergency:'Emergência',
     banner_title:'Protocolo de Emergência Ativo',banner_sub:'Triagem imediata com IA — funciona com conectividade limitada.',banner_btn:'INICIAR PROTOCOLO',
-    hero_badge:'Ergy: Seu Assistente Clínico com IA',
-    hero_h1:'Cuidado Preciso,<br><span class="font-extrabold italic text-gem-teal">Impulsado por Ergy.</span>',
+    hero_badge:'Ergy: Seu Suporte Biomédico Inteligente',
+    hero_h1:'Cuidado de Classe Mundial,<br><span class="font-extrabold italic text-gem-teal">Passo a Passo.</span>',
     hero_sub:'Triagem multiespecialidade com IA para emergências e suporte clínico remoto — para comunidades sem acesso médico suficiente.',
     hero_btn1:'Falar com Ergy',hero_btn2:'Guias de Primeiros Socorros',
     card_title:'Consulte o Ergy AI',card_sub:'Triagem multiespecialidade. Para zonas com acesso médico limitado.',card_btn:'Consultar Agora',
@@ -453,8 +502,8 @@ const T = {
   fr:{flag:'🇫🇷',code:'FR',dir:'ltr',
     nav_consult:'Consultation',nav_firstaid:'Premiers Secours',nav_emergency:'Urgence',
     banner_title:'Protocole d\'Urgence Actif',banner_sub:'Triage immédiat par IA — fonctionne avec une connectivité limitée.',banner_btn:'DÉMARRER LE PROTOCOLE',
-    hero_badge:'Ergy: Votre Assistant Clinique IA',
-    hero_h1:'Soins Précis,<br><span class="font-extrabold italic text-gem-teal">Propulsés par Ergy.</span>',
+    hero_badge:'Ergy: Votre Soutien Biomédical Intelligent',
+    hero_h1:'Soins de Classe Mondiale,<br><span class="font-extrabold italic text-gem-teal">Étape par Étape.</span>',
     hero_sub:'Triage multispécialité par IA pour les urgences et le soutien clinique à distance.',
     hero_btn1:'Parler à Ergy',hero_btn2:'Guides de Premiers Secours',
     card_title:'Consulter Ergy AI',card_sub:'Triage multispécialité. Conçu pour les zones à accès médical limité.',card_btn:'Consulter Maintenant',
@@ -501,8 +550,8 @@ const T = {
   zh:{flag:'🇨🇳',code:'ZH',dir:'ltr',
     nav_consult:'问诊',nav_firstaid:'急救指南',nav_emergency:'紧急求助',
     banner_title:'紧急协议激活中',banner_sub:'AI即时分诊 — 低网络连接下同样可用。',banner_btn:'启动协议',
-    hero_badge:'Ergy：您的临床AI助手',
-    hero_h1:'精准医疗，<br><span class="font-extrabold italic text-gem-teal">由Ergy驱动。</span>',
+    hero_badge:'Ergy：您的智能生物医学支持',
+    hero_h1:'世界级医疗，<br><span class="font-extrabold italic text-gem-teal">一步一步陪伴您。</span>',
     hero_sub:'多专科AI分诊，为紧急情况提供远程临床支持 — 专为医疗资源匮乏的社区设计。',
     hero_btn1:'与Ergy对话',hero_btn2:'急救指南',
     card_title:'咨询Ergy AI',card_sub:'多专科分诊。专为医疗条件有限地区设计。',card_btn:'立即咨询',
@@ -549,7 +598,20 @@ const T = {
 };
 
 // ===================== LANGUAGE ENGINE =====================
-let lang = 'es';
+let lang = 'en';
+
+// Auto-detect browser language on load
+(function detectLang() {
+  const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase().substring(0, 2);
+  const supported = { es: 'es', en: 'en', pt: 'pt', fr: 'fr', zh: 'zh' };
+  lang = supported[browserLang] || 'en';
+  // Apply on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => setLang(lang));
+  } else {
+    setLang(lang);
+  }
+})();
 
 function setLang(l) {
   lang = l;
