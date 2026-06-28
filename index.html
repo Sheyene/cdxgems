@@ -332,6 +332,9 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
         <div class="flex gap-4 items-start p-4 border border-amber-400 rounded-2xl bg-amber-50"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold" data-i18n="bu2_t">Retira lo que apriete</p><p class="text-sm text-on-surface-variant" data-i18n="bu2_d">Quita joyas y ropa cerca de la quemadura antes de que inflame.</p></div></div>
         <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold" data-i18n="bu3_t">Cubre con cuidado</p><p class="text-sm text-on-surface-variant" data-i18n="bu3_d">Gasa limpia. No revientes ampollas. Nada de mantequilla ni pasta dental.</p></div></div>
         <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">!</span><div><p class="font-bold text-clinical-red" data-i18n="bu4_t">Atención urgente si:</p><p class="text-sm text-on-surface-variant" data-i18n="bu4_d">Cara, manos, pies, genitales o articulaciones. Área mayor que la palma. Cualquier quemadura en niños.</p></div></div>
+        <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span><span data-i18n="fa_ergy_btn">Guía en tiempo real con Ergy</span></button>
+      </div>
+
       <!-- Protocol 5: ESTOY ATRAPADO -->
       <div id="proto-p5" class="hidden space-y-4">
         <div class="bg-clinical-red/10 border border-clinical-red rounded-2xl p-4 mb-2">
@@ -380,6 +383,8 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
         <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span>Guía en tiempo real con Ergy</button>
       </div>
 
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer class="bg-dark-navy text-white py-16 border-t border-white/5">
@@ -818,7 +823,18 @@ window.addEventListener('scroll',()=>{const n=document.getElementById('mainNav')
 
 // ===================== PROTOCOL TABS =====================
 const PROTOS=['p1','p2','p3','p4','p5','p6','p7'];
-function showProtocol(id){PROTOS.forEach(p=>{document.getElementById('proto-'+p).classList.add('hidden');document.getElementById('tab-'+p).className='capsule-btn border border-outline-variant text-on-surface-variant text-sm';});document.getElementById('proto-'+id).classList.remove('hidden');document.getElementById('tab-'+id).className='capsule-btn bg-dark-navy text-white text-sm';}
+function showProtocol(id){
+  PROTOS.forEach(p=>{
+    document.getElementById('proto-'+p).classList.add('hidden');
+    const tab = document.getElementById('tab-'+p);
+    if(p==='p5') tab.className='capsule-btn border-2 border-clinical-red text-clinical-red text-sm font-bold';
+    else tab.className='capsule-btn border border-outline-variant text-on-surface-variant text-sm';
+  });
+  document.getElementById('proto-'+id).classList.remove('hidden');
+  const activeTab = document.getElementById('tab-'+id);
+  if(id==='p5') activeTab.className='capsule-btn bg-clinical-red text-white text-sm font-bold';
+  else activeTab.className='capsule-btn bg-dark-navy text-white text-sm';
+}
 
 // ===================== SOS LOCATION =====================
 let userCoords = null;
