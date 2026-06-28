@@ -192,7 +192,54 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
     </div>
   </section>
 
-  <!-- Gems Activos -->
+  <!-- SOS UBICACIÓN — botón de vida -->
+  <div class="bg-dark-navy py-6 px-4 md:px-16 border-b-2 border-gem-teal/30">
+    <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 bg-gem-teal/20 rounded-xl flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-gem-teal text-2xl">location_on</span>
+        </div>
+        <div>
+          <p class="font-bold text-white text-sm">¿ESTÁS ATRAPADO?</p>
+          <p class="text-gem-teal text-xs">Envía tu ubicación exacta a los rescatistas — un solo toque.</p>
+        </div>
+      </div>
+      <button onclick="sendSOS()" class="bg-gem-teal text-dark-navy px-8 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-white transition-all shadow-lg active:scale-95 shrink-0 text-sm">
+        <span class="material-symbols-outlined">sos</span>ENVIAR MI UBICACIÓN AHORA
+      </button>
+    </div>
+  </div>
+
+  <!-- SOS Modal -->
+  <div id="sosModal" class="hidden fixed inset-0 z-[300] bg-black/80 flex items-center justify-center p-4">
+    <div class="bg-dark-navy border border-gem-teal/30 rounded-3xl max-w-md w-full p-8">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-gem-teal/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-3xl text-gem-teal">location_on</span>
+        </div>
+        <h2 class="text-xl font-bold text-white mb-2">Enviando tu ubicación</h2>
+        <p class="text-white/60 text-sm" id="sosMsg">Obteniendo coordenadas GPS...</p>
+      </div>
+      <div id="sosOptions" class="space-y-3 hidden">
+        <a id="sosWhatsapp" href="#" target="_blank" class="w-full bg-green-500 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-green-400 transition-all">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.555 4.122 1.524 5.855L.057 23.886l6.194-1.438A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.877 9.877 0 01-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.58 6.58 2.106 12 2.106c5.421 0 9.894 4.474 9.894 9.894 0 5.421-4.473 9.894-9.894 9.894z"/></svg>
+          Enviar por WhatsApp
+        </a>
+        <a id="sosSMS" href="#" class="w-full bg-white/10 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition-all border border-white/20">
+          <span class="material-symbols-outlined">sms</span>Enviar por SMS
+        </a>
+        <div id="sosCoords" class="bg-white/5 rounded-xl p-4 text-center">
+          <p class="text-white/40 text-xs mb-1">Tus coordenadas:</p>
+          <p class="text-gem-teal font-mono text-sm font-bold" id="sosCoordsText">—</p>
+          <button onclick="copyCoords()" class="mt-2 text-white/40 text-xs hover:text-white">Copiar coordenadas</button>
+        </div>
+        <p class="text-white/30 text-xs text-center">Conserva batería: activa Modo Avión después de enviar. Revisa mensajes cada 30 min.</p>
+      </div>
+      <button onclick="document.getElementById('sosModal').classList.add('hidden')" class="w-full mt-4 text-white/40 text-sm hover:text-white transition-colors">Cerrar</button>
+    </div>
+  </div>
+
+
   <section class="py-24 bg-surface-container-low overflow-hidden">
     <div class="max-w-[1200px] mx-auto px-4 md:px-16">
       <div class="mb-16">
@@ -237,6 +284,9 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
         <button onclick="showProtocol('p2')" id="tab-p2" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm" data-i18n="tab2">Control de sangrado</button>
         <button onclick="showProtocol('p3')" id="tab-p3" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm" data-i18n="tab3">Asfixia</button>
         <button onclick="showProtocol('p4')" id="tab-p4" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm" data-i18n="tab4">Quemaduras</button>
+        <button onclick="showProtocol('p5')" id="tab-p5" class="capsule-btn border-2 border-clinical-red text-clinical-red text-sm font-bold">🆘 Estoy atrapado</button>
+        <button onclick="showProtocol('p6')" id="tab-p6" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm">Torniquete</button>
+        <button onclick="showProtocol('p7')" id="tab-p7" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm">Infecciones</button>
       </div>
 
       <!-- Protocol 1: CPR -->
@@ -282,10 +332,54 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
         <div class="flex gap-4 items-start p-4 border border-amber-400 rounded-2xl bg-amber-50"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold" data-i18n="bu2_t">Retira lo que apriete</p><p class="text-sm text-on-surface-variant" data-i18n="bu2_d">Quita joyas y ropa cerca de la quemadura antes de que inflame.</p></div></div>
         <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold" data-i18n="bu3_t">Cubre con cuidado</p><p class="text-sm text-on-surface-variant" data-i18n="bu3_d">Gasa limpia. No revientes ampollas. Nada de mantequilla ni pasta dental.</p></div></div>
         <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">!</span><div><p class="font-bold text-clinical-red" data-i18n="bu4_t">Atención urgente si:</p><p class="text-sm text-on-surface-variant" data-i18n="bu4_d">Cara, manos, pies, genitales o articulaciones. Área mayor que la palma. Cualquier quemadura en niños.</p></div></div>
-        <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span><span data-i18n="fa_ergy_btn">Guía en tiempo real con Ergy</span></button>
+      <!-- Protocol 5: ESTOY ATRAPADO -->
+      <div id="proto-p5" class="hidden space-y-4">
+        <div class="bg-clinical-red/10 border border-clinical-red rounded-2xl p-4 mb-2">
+          <p class="font-bold text-clinical-red text-center">Si estás atrapado, estás vivo. Eso es lo más importante.</p>
+          <p class="text-sm text-center text-on-surface-variant mt-1">Sigue estos pasos exactamente.</p>
+        </div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl bg-neutral-50"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold">Envía tu ubicación AHORA</p><p class="text-sm text-on-surface-variant">Usa el botón verde "ENVIAR MI UBICACIÓN" arriba de esta página. Se abre WhatsApp con tus coordenadas listas para enviar. Mándalo a cualquier número — familiar, grupo, desconocido.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-clinical-red rounded-2xl bg-red-50"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold">Conserva la batería — es tu vida</p><p class="text-sm text-on-surface-variant">Activa Modo Avión ahora mismo. Baja el brillo al mínimo. Cierra todas las apps. Enciende el teléfono solo cada 30 minutos para revisar mensajes. Cada % de batería es tiempo.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold">Señaliza tu posición</p><p class="text-sm text-on-surface-variant">Golpea una tubería o pared: TOC-TOC-TOC, pausa, TOC-TOC-TOC. Es el código universal de rescate. Repítelo cada vez que escuches ruido. Usa la linterna solo cuando escuches voces muy cerca.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">4</span><div><p class="font-bold">Protege tus vías respiratorias</p><p class="text-sm text-on-surface-variant">Cúbrete la nariz y boca con tela — camiseta, pañuelo, lo que tengas. Si hay polvo, respira despacio y poco profundo. No grites — agota el oxígeno y la energía. Escribe mensajes en vez de hablar.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">5</span><div><p class="font-bold text-clinical-red">NO hagas esto</p><p class="text-sm text-on-surface-variant">No muevas estructuras que te rodean — pueden derrumbarse. No encendas fuego ni fósforos. No intentes liberarte de un aplastamiento solo — espera a los rescatistas. Si tienes un miembro atrapado bajo peso, NO lo jales bruscamente.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-gem-teal text-dark-navy w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">✓</span><div><p class="font-bold text-primary">Conserva energía y calma</p><p class="text-sm text-on-surface-variant">Respira lento y profundo. Si puedes, acuéstate. Mantén la mente activa — cuenta, reza, canta en tu cabeza. Los equipos de rescate de más de 20 países están en Venezuela ahora mismo buscándote.</p></div></div>
+        <button onclick="sendSOS()" class="w-full mt-2 bg-gem-teal text-dark-navy py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-white transition-all active:scale-95">
+          <span class="material-symbols-outlined">location_on</span>ENVIAR MI UBICACIÓN AHORA
+        </button>
+        <button onclick="openErgy('emergency')" class="w-full bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span>Hablar con Ergy ahora</button>
       </div>
-    </div>
-  </section>
+
+      <!-- Protocol 6: TORNIQUETE -->
+      <div id="proto-p6" class="hidden space-y-4">
+        <div class="bg-clinical-red/10 border border-clinical-red rounded-2xl p-4 mb-2">
+          <p class="font-bold text-clinical-red text-center">⚠️ El torniquete es el ÚLTIMO recurso.</p>
+          <p class="text-sm text-center text-on-surface-variant mt-1">Solo si hay sangrado masivo que no se detiene con presión directa en brazos o piernas.</p>
+        </div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold">¿Cuándo hacerlo?</p><p class="text-sm text-on-surface-variant">Solo en extremidades (brazos o piernas). Nunca en cuello, torso o cabeza. Solo si presionaste fuerte durante 10 minutos y el sangrado no cede. Solo si el sangrado es tan severo que amenaza la vida en minutos.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-clinical-red rounded-2xl bg-red-50"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold">Improvisa el torniquete</p><p class="text-sm text-on-surface-variant">Usa: cinturón, corbata, tira de ropa resistente, cable — algo mínimo 3-4 cm de ancho. Nunca cordón delgado o alambre — corta la piel y los vasos.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold">Colócalo correctamente</p><p class="text-sm text-on-surface-variant">5 a 7 cm por encima de la herida — nunca sobre la herida. Pasa la tela alrededor del miembro dos veces. Ata un nudo. Pon un palo o lápiz encima del nudo. Ata otro nudo sobre el palo. Gira el palo hasta que el sangrado se detenga.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">4</span><div><p class="font-bold">ANOTA LA HORA — es crítico</p><p class="text-sm text-on-surface-variant">Escribe la hora exacta en la piel del paciente con lo que tengas — bolígrafo, marcador, incluso sangre. El médico NECESITA saber cuánto tiempo lleva puesto. Más de 2 horas aumenta riesgo de pérdida del miembro.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">5</span><div><p class="font-bold text-clinical-red">NO hagas esto</p><p class="text-sm text-on-surface-variant">No lo aflojes una vez puesto — puede ser fatal. No lo cubras — los rescatistas necesitan verlo. No uses cordón delgado, alambre, ni cuerda. No lo pongas en articulaciones (rodilla, codo).</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-amber-400 rounded-2xl bg-amber-50"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">!</span><div><p class="font-bold text-amber-700">Síndrome de aplastamiento — CRÍTICO</p><p class="text-sm text-on-surface-variant">Si tiene un miembro atrapado bajo escombros por más de 1 hora — NO lo liberes bruscamente sin ayuda médica. Al liberar puede haber una descarga de toxinas al torrente sanguíneo que cause paro cardíaco en minutos. Espera a los rescatistas o consulta a Ergy antes de actuar.</p></div></div>
+        <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span>Guía en tiempo real con Ergy</button>
+      </div>
+
+      <!-- Protocol 7: INFECCIONES -->
+      <div id="proto-p7" class="hidden space-y-4">
+        <div class="bg-amber-50 border border-amber-400 rounded-2xl p-4 mb-2">
+          <p class="font-bold text-amber-700 text-center">⚠️ Las próximas 72 horas son críticas para las infecciones.</p>
+          <p class="text-sm text-center text-on-surface-variant mt-1">Una herida no tratada puede infectarse en horas en condiciones de escombros.</p>
+        </div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold">Limpia la herida ahora — sin antiséptico</p><p class="text-sm text-on-surface-variant">Usa agua limpia — embotellada si tienes, o agua de cualquier recipiente. Lava con presión directa durante al menos 5 minutos. Más agua es mejor que cualquier antiséptico. Retira suciedad visible con un paño limpio — sin frotar.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-amber-400 rounded-2xl bg-amber-50"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold">Si tienes alcohol o agua oxigenada</p><p class="text-sm text-on-surface-variant">Úsalo UNA vez para limpiar los bordes — no adentro de la herida. El alcohol dentro de la herida daña el tejido y retrasa la curación. Agua oxigenada solo en heridas superficiales.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold">Cubre e improvisa un vendaje</p><p class="text-sm text-on-surface-variant">Usa tela limpia — camiseta interior, sábana. Si no tienes nada limpio, usa lo más limpio que tengas. Cámbialo cada 12 horas si puedes. Mantén la herida cubierta — el aire no es mejor.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">4</span><div><p class="font-bold">Señales de infección — actúa de inmediato</p><p class="text-sm text-on-surface-variant">Alerta si ves: enrojecimiento que se expande alrededor de la herida, calor intenso en la zona, pus o líquido amarillo/verde, olor fuerte, líneas rojas que salen de la herida (muy urgente), fiebre mayor de 38.5°C, confusión o delirio.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">5</span><div><p class="font-bold">Heridas de aplastamiento — riesgo especial</p><p class="text-sm text-on-surface-variant">Las heridas por escombros tienen tierra, polvo y bacterias profundas. Son las más propensas a infecciones graves como tétanos y gangrena. Necesitan atención médica urgente — no esperes a que empeoren. Si ves tejido oscuro o negro alrededor de la herida, es una emergencia.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">6</span><div><p class="font-bold">Fiebre post-trauma</p><p class="text-sm text-on-surface-variant">Fiebre en las primeras 24h después de un trauma puede ser normal. Fiebre después de 24–48h es señal de infección. Si hay fiebre alta con confusión, rigidez en el cuello o sarpullido — es una emergencia crítica. Busca ayuda médica inmediatamente.</p></div></div>
+        <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span>Guía en tiempo real con Ergy</button>
+      </div>
+
 
   <!-- Footer -->
   <footer class="bg-dark-navy text-white py-16 border-t border-white/5">
@@ -723,8 +817,41 @@ document.addEventListener('click', e => {
 window.addEventListener('scroll',()=>{const n=document.getElementById('mainNav');if(window.scrollY>50){n.classList.add('shadow-lg');n.style.paddingTop='8px';n.style.paddingBottom='8px';}else{n.classList.remove('shadow-lg');n.style.paddingTop='';n.style.paddingBottom='';}});
 
 // ===================== PROTOCOL TABS =====================
-const PROTOS=['p1','p2','p3','p4'];
+const PROTOS=['p1','p2','p3','p4','p5','p6','p7'];
 function showProtocol(id){PROTOS.forEach(p=>{document.getElementById('proto-'+p).classList.add('hidden');document.getElementById('tab-'+p).className='capsule-btn border border-outline-variant text-on-surface-variant text-sm';});document.getElementById('proto-'+id).classList.remove('hidden');document.getElementById('tab-'+id).className='capsule-btn bg-dark-navy text-white text-sm';}
+
+// ===================== SOS LOCATION =====================
+let userCoords = null;
+function sendSOS() {
+  document.getElementById('sosModal').classList.remove('hidden');
+  document.getElementById('sosOptions').classList.add('hidden');
+  document.getElementById('sosMsg').textContent = 'Obteniendo coordenadas GPS...';
+  if (!navigator.geolocation) {
+    document.getElementById('sosMsg').textContent = 'GPS no disponible. Copia tu ubicación manualmente de Google Maps.';
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude.toFixed(6);
+    const lng = pos.coords.longitude.toFixed(6);
+    userCoords = {lat, lng};
+    const mapsLink = `https://maps.google.com/?q=${lat},${lng}`;
+    const msg = encodeURIComponent(`🆘 ESTOY ATRAPADO - NECESITO RESCATE\n\nMi ubicación exacta:\n📍 ${mapsLink}\nCoordenadas: ${lat}, ${lng}\n\nAbierto con CDxGems.doctor`);
+    document.getElementById('sosCoordsText').textContent = `${lat}, ${lng}`;
+    document.getElementById('sosWhatsapp').href = `https://wa.me/?text=${msg}`;
+    document.getElementById('sosSMS').href = `sms:?body=${msg}`;
+    document.getElementById('sosMsg').textContent = '✅ Ubicación obtenida. Elige cómo enviarla:';
+    document.getElementById('sosOptions').classList.remove('hidden');
+  }, err => {
+    document.getElementById('sosMsg').textContent = 'No se pudo obtener GPS. Ve a Google Maps, copia el link de tu ubicación y envíalo por WhatsApp.';
+  }, {enableHighAccuracy: true, timeout: 10000});
+}
+function copyCoords() {
+  if (userCoords) {
+    navigator.clipboard.writeText(`${userCoords.lat}, ${userCoords.lng}`).then(() => {
+      document.querySelector('#sosCoords button').textContent = '¡Copiado!';
+    });
+  }
+}
 
 // ===================== ERGY MODAL =====================
 let currentMode='general',history=[];
