@@ -158,7 +158,7 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
           <span class="material-symbols-outlined text-gem-teal">robot_2</span>
           <span class="text-[13px] font-bold tracking-widest uppercase" data-i18n="hero_badge">Ergy: Your Smart Biomed Support</span>
         </div>
-        <h1 class="font-headline-lg text-5xl md:text-6xl leading-tight" data-i18n="hero_h1">World-Class Care,<br><span class="font-extrabold italic text-gem-teal">Step-By-Step.</span></h1>
+        <h1 class="font-headline-lg text-5xl md:text-6xl leading-tight" data-i18n="hero_h1">Medical Care,<br><span class="font-extrabold italic text-gem-teal">Step-By-Step.</span></h1>
         <p class="text-body-lg opacity-80 max-w-md" data-i18n="hero_sub">Multi-specialty AI triage for emergencies and remote clinical support — powered by Clinical-Grade Neural Networks.</p>
         <div class="flex flex-wrap gap-4 pt-4">
           <button onclick="openErgy('general')" class="bg-gem-teal text-dark-navy capsule-btn hover:bg-white active:scale-95 flex items-center gap-2 font-bold">
@@ -200,12 +200,12 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
           <span class="material-symbols-outlined text-gem-teal text-2xl">location_on</span>
         </div>
         <div>
-          <p class="font-bold text-white text-sm">¿ESTÁS ATRAPADO?</p>
-          <p class="text-gem-teal text-xs">Envía tu ubicación exacta a los rescatistas — un solo toque.</p>
+          <p class="font-bold text-white text-sm" data-i18n="sos_bar_title">¿ESTÁS ATRAPADO?</p>
+          <p class="text-gem-teal text-xs" data-i18n="sos_bar_sub">Envía tu ubicación exacta a los rescatistas — un solo toque.</p>
         </div>
       </div>
       <button onclick="sendSOS()" class="bg-gem-teal text-dark-navy px-8 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-white transition-all shadow-lg active:scale-95 shrink-0 text-sm">
-        <span class="material-symbols-outlined">sos</span>ENVIAR MI UBICACIÓN AHORA
+        <span class="material-symbols-outlined">sos</span><span data-i18n="sos_bar_btn">ENVIAR MI UBICACIÓN AHORA</span>
       </button>
     </div>
   </div>
@@ -217,28 +217,111 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
         <div class="w-16 h-16 bg-gem-teal/20 rounded-full flex items-center justify-center mx-auto mb-4">
           <span class="material-symbols-outlined text-3xl text-gem-teal">location_on</span>
         </div>
-        <h2 class="text-xl font-bold text-white mb-2">Enviando tu ubicación</h2>
+        <h2 class="text-xl font-bold text-white mb-2" id="sosModalTitle">Enviando tu ubicación</h2>
         <p class="text-white/60 text-sm" id="sosMsg">Obteniendo coordenadas GPS...</p>
       </div>
       <div id="sosOptions" class="space-y-3 hidden">
         <a id="sosWhatsapp" href="#" target="_blank" class="w-full bg-green-500 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-green-400 transition-all">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.555 4.122 1.524 5.855L.057 23.886l6.194-1.438A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.877 9.877 0 01-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.58 6.58 2.106 12 2.106c5.421 0 9.894 4.474 9.894 9.894 0 5.421-4.473 9.894-9.894 9.894z"/></svg>
-          Enviar por WhatsApp
+          <span id="sosWhatsappBtn">Enviar por WhatsApp</span>
         </a>
         <a id="sosSMS" href="#" class="w-full bg-white/10 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition-all border border-white/20">
-          <span class="material-symbols-outlined">sms</span>Enviar por SMS
+          <span class="material-symbols-outlined">sms</span><span id="sosSMSBtn">Enviar por SMS</span>
         </a>
         <div id="sosCoords" class="bg-white/5 rounded-xl p-4 text-center">
-          <p class="text-white/40 text-xs mb-1">Tus coordenadas:</p>
+          <p class="text-white/40 text-xs mb-1" id="sosCoordsLabel">Tus coordenadas:</p>
           <p class="text-gem-teal font-mono text-sm font-bold" id="sosCoordsText">—</p>
-          <button onclick="copyCoords()" class="mt-2 text-white/40 text-xs hover:text-white">Copiar coordenadas</button>
+          <button onclick="copyCoords()" id="sosCopyBtn" class="mt-2 text-white/40 text-xs hover:text-white">Copiar coordenadas</button>
         </div>
-        <p class="text-white/30 text-xs text-center">Conserva batería: activa Modo Avión después de enviar. Revisa mensajes cada 30 min.</p>
+        <p class="text-white/30 text-xs text-center" id="sosTip">Conserva batería: activa Modo Avión después de enviar.</p>
       </div>
-      <button onclick="document.getElementById('sosModal').classList.add('hidden')" class="w-full mt-4 text-white/40 text-sm hover:text-white transition-colors">Cerrar</button>
+      <button onclick="document.getElementById('sosModal').classList.add('hidden')" id="sosCloseBtn" class="w-full mt-4 text-white/40 text-sm hover:text-white transition-colors">Cerrar</button>
     </div>
   </div>
 
+
+  <!-- NASA SATELLITE MAP SECTION -->
+  <section class="py-16 bg-dark-navy border-t border-white/10">
+    <div class="max-w-[1200px] mx-auto px-4 md:px-16">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+        <div>
+          <div class="flex items-center gap-3 mb-4 flex-wrap">
+            <span class="text-white font-bold text-sm tracking-widest uppercase bg-white/10 px-3 py-1 rounded-full">NASA</span>
+            <span class="text-white/30 text-xs">×</span>
+            <span class="text-gem-teal font-bold text-sm">CDxGems</span>
+          </div>
+          <p class="text-gem-teal font-data-mono text-xs tracking-[0.2em] uppercase mb-2" data-i18n="nasa_eyebrow">NASA Disasters Program · Live Satellite Data</p>
+          <h2 class="text-2xl font-bold text-white" data-i18n="nasa_title">Venezuela Earthquake — Satellite Map</h2>
+          <p class="text-white/50 text-sm mt-2" data-i18n="nasa_sub">Real-time damage assessment, landslide detection and power outage data from NASA satellites.</p>
+          <div class="flex flex-wrap gap-2 mt-4">
+            <span class="text-white/40 text-xs px-3 py-1 rounded-full border border-white/10">Disasters Response Coordination System</span>
+            <span class="text-white/40 text-xs px-3 py-1 rounded-full border border-white/10">NASA Disasters Program</span>
+            <span class="text-white/40 text-xs px-3 py-1 rounded-full border border-white/10">NASA Langley Research Center</span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-2 shrink-0">
+          <a href="https://disasters-nasa.hub.arcgis.com/" target="_blank" class="bg-gem-teal text-dark-navy px-5 py-2 rounded-full text-xs font-bold hover:bg-white transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-base">open_in_new</span><span data-i18n="nasa_btn1">Open NASA Disasters Portal</span>
+          </a>
+          <a href="https://maps.disasters.nasa.gov/" target="_blank" class="bg-white/10 text-white px-5 py-2 rounded-full text-xs font-bold hover:bg-white/20 transition-all flex items-center gap-2 border border-white/20">
+            <span class="material-symbols-outlined text-base">map</span><span data-i18n="nasa_btn2">Live Map</span>
+          </a>
+        </div>
+      </div>
+      <!-- NASA data area -->
+      <div class="relative rounded-2xl overflow-hidden border border-white/10 bg-white/5 flex flex-col items-center justify-center p-8 text-center" style="min-height:260px">
+        <span class="material-symbols-outlined text-5xl text-gem-teal mb-4">satellite_alt</span>
+        <p class="text-white font-bold mb-2" data-i18n="nasa_map_title">NASA Satellite Data — Venezuela Earthquake June 2026</p>
+        <p class="text-white/50 text-sm mb-6 max-w-lg" data-i18n="nasa_map_sub">View real-time damage maps, landslide detection, power outages and land deformation captured by NASA satellites. Data is free and publicly available.</p>
+        <div class="flex flex-wrap gap-3 justify-center">
+          <a href="https://disasters-nasa.hub.arcgis.com/" target="_blank" class="bg-gem-teal text-dark-navy px-5 py-2.5 rounded-full font-bold hover:bg-white transition-all flex items-center gap-2 text-sm">
+            <span class="material-symbols-outlined text-base">open_in_new</span><span data-i18n="nasa_btn1">Open NASA Disasters Portal</span>
+          </a>
+          <a href="https://maps.disasters.nasa.gov/" target="_blank" class="bg-white/10 text-white px-5 py-2.5 rounded-full font-bold hover:bg-white/20 transition-all border border-white/20 flex items-center gap-2 text-sm">
+            <span class="material-symbols-outlined text-base">map</span><span data-i18n="nasa_btn2">Live Map</span>
+          </a>
+          <a href="https://gis.earthdata.nasa.gov/portal/home/item.html?id=0c3d77dd5aae46e4829d9a282477615c" target="_blank" class="bg-clinical-red/80 text-white px-5 py-2.5 rounded-full font-bold hover:bg-clinical-red transition-all flex items-center gap-2 text-sm">
+            <span class="material-symbols-outlined text-base">apartment</span><span data-i18n="nasa_btn3">Building Damage Estimates</span>
+          </a>
+        </div>
+      </div>
+      <!-- NASA data products grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+        <a href="https://gis.earthdata.nasa.gov/portal/home/group.html?id=4d46fcec8d7e459da094129317ab78dd#content" target="_blank" class="bg-white/5 border border-white/10 rounded-2xl p-4 hover:bg-white/10 transition-all">
+          <span class="material-symbols-outlined text-2xl text-gem-teal mb-2 block">satellite_alt</span>
+          <p class="text-white text-xs font-bold mb-1" data-i18n="nasa_p1_title">Satellite Imagery</p>
+          <p class="text-white/40 text-xs" data-i18n="nasa_p1_sub">Bird's-eye damage view</p>
+        </a>
+        <a href="https://gis.earthdata.nasa.gov/portal/home/group.html?id=4d46fcec8d7e459da094129317ab78dd#content" target="_blank" class="bg-white/5 border border-white/10 rounded-2xl p-4 hover:bg-white/10 transition-all">
+          <span class="material-symbols-outlined text-2xl text-amber-400 mb-2 block">light_mode</span>
+          <p class="text-white text-xs font-bold mb-1" data-i18n="nasa_p2_title">Power Outages</p>
+          <p class="text-white/40 text-xs" data-i18n="nasa_p2_sub">Nighttime lights data</p>
+        </a>
+        <a href="https://gis.earthdata.nasa.gov/portal/home/group.html?id=4d46fcec8d7e459da094129317ab78dd#content" target="_blank" class="bg-white/5 border border-white/10 rounded-2xl p-4 hover:bg-white/10 transition-all">
+          <span class="material-symbols-outlined text-2xl text-clinical-red mb-2 block">terrain</span>
+          <p class="text-white text-xs font-bold mb-1" data-i18n="nasa_p3_title">Landslide Risk</p>
+          <p class="text-white/40 text-xs" data-i18n="nasa_p3_sub">High-risk zone detection</p>
+        </a>
+        <a href="https://gis.earthdata.nasa.gov/portal/home/item.html?id=0c3d77dd5aae46e4829d9a282477615c" target="_blank" class="bg-white/5 border border-clinical-red/30 rounded-2xl p-4 hover:bg-white/10 transition-all">
+          <span class="material-symbols-outlined text-2xl text-clinical-red mb-2 block">apartment</span>
+          <p class="text-white text-xs font-bold mb-1" data-i18n="nasa_p4_title">Building Damage</p>
+          <p class="text-white/40 text-xs" data-i18n="nasa_p4_sub">Infrastructure assessment</p>
+        </a>
+      </div>
+      <!-- Agency credits bar -->
+      <div class="mt-6 pt-5 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap gap-2 items-center">
+          <span class="text-white/30 text-xs">In collaboration with:</span>
+          <span class="text-white/50 text-xs font-bold">Disasters Response Coordination System</span>
+          <span class="text-white/20 text-xs">·</span>
+          <span class="text-white/50 text-xs font-bold">NASA Disasters Program</span>
+          <span class="text-white/20 text-xs">·</span>
+          <span class="text-white/50 text-xs font-bold">NASA Langley Research Center</span>
+        </div>
+        <p class="text-white/20 text-xs" data-i18n="nasa_credit">Data provided by NASA · maps.disasters.nasa.gov · Free and open access</p>
+      </div>
+    </div>
+  </section>
 
   <section class="py-24 bg-surface-container-low overflow-hidden">
     <div class="max-w-[1200px] mx-auto px-4 md:px-16">
@@ -284,9 +367,9 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
         <button onclick="showProtocol('p2')" id="tab-p2" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm" data-i18n="tab2">Control de sangrado</button>
         <button onclick="showProtocol('p3')" id="tab-p3" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm" data-i18n="tab3">Asfixia</button>
         <button onclick="showProtocol('p4')" id="tab-p4" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm" data-i18n="tab4">Quemaduras</button>
-        <button onclick="showProtocol('p5')" id="tab-p5" class="capsule-btn border-2 border-clinical-red text-clinical-red text-sm font-bold">🆘 Estoy atrapado</button>
-        <button onclick="showProtocol('p6')" id="tab-p6" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm">Torniquete</button>
-        <button onclick="showProtocol('p7')" id="tab-p7" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm">Infecciones</button>
+        <button onclick="showProtocol('p5')" id="tab-p5" class="capsule-btn border-2 border-clinical-red text-clinical-red text-sm font-bold" data-i18n="tab5">🆘 Estoy atrapado</button>
+        <button onclick="showProtocol('p6')" id="tab-p6" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm" data-i18n="tab6">Torniquete</button>
+        <button onclick="showProtocol('p7')" id="tab-p7" class="capsule-btn border border-outline-variant text-on-surface-variant text-sm" data-i18n="tab7">Infecciones</button>
       </div>
 
       <!-- Protocol 1: CPR -->
@@ -338,49 +421,49 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
       <!-- Protocol 5: ESTOY ATRAPADO -->
       <div id="proto-p5" class="hidden space-y-4">
         <div class="bg-clinical-red/10 border border-clinical-red rounded-2xl p-4 mb-2">
-          <p class="font-bold text-clinical-red text-center">Si estás atrapado, estás vivo. Eso es lo más importante.</p>
-          <p class="text-sm text-center text-on-surface-variant mt-1">Sigue estos pasos exactamente.</p>
+          <p class="font-bold text-clinical-red text-center" data-i18n="p5_header">Si estás atrapado, estás vivo. Eso es lo más importante.</p>
+          <p class="text-sm text-center text-on-surface-variant mt-1" data-i18n="p5_header_sub">Sigue estos pasos exactamente.</p>
         </div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl bg-neutral-50"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold">Envía tu ubicación AHORA</p><p class="text-sm text-on-surface-variant">Usa el botón verde "ENVIAR MI UBICACIÓN" arriba de esta página. Se abre WhatsApp con tus coordenadas listas para enviar. Mándalo a cualquier número — familiar, grupo, desconocido.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-clinical-red rounded-2xl bg-red-50"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold">Conserva la batería — es tu vida</p><p class="text-sm text-on-surface-variant">Activa Modo Avión ahora mismo. Baja el brillo al mínimo. Cierra todas las apps. Enciende el teléfono solo cada 30 minutos para revisar mensajes. Cada % de batería es tiempo.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold">Señaliza tu posición</p><p class="text-sm text-on-surface-variant">Golpea una tubería o pared: TOC-TOC-TOC, pausa, TOC-TOC-TOC. Es el código universal de rescate. Repítelo cada vez que escuches ruido. Usa la linterna solo cuando escuches voces muy cerca.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">4</span><div><p class="font-bold">Protege tus vías respiratorias</p><p class="text-sm text-on-surface-variant">Cúbrete la nariz y boca con tela — camiseta, pañuelo, lo que tengas. Si hay polvo, respira despacio y poco profundo. No grites — agota el oxígeno y la energía. Escribe mensajes en vez de hablar.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">5</span><div><p class="font-bold text-clinical-red">NO hagas esto</p><p class="text-sm text-on-surface-variant">No muevas estructuras que te rodean — pueden derrumbarse. No encendas fuego ni fósforos. No intentes liberarte de un aplastamiento solo — espera a los rescatistas. Si tienes un miembro atrapado bajo peso, NO lo jales bruscamente.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-gem-teal text-dark-navy w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">✓</span><div><p class="font-bold text-primary">Conserva energía y calma</p><p class="text-sm text-on-surface-variant">Respira lento y profundo. Si puedes, acuéstate. Mantén la mente activa — cuenta, reza, canta en tu cabeza. Los equipos de rescate de más de 20 países están en Venezuela ahora mismo buscándote.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl bg-neutral-50"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold" data-i18n="p5_1t">Envía tu ubicación AHORA</p><p class="text-sm text-on-surface-variant" data-i18n="p5_1d">Usa el botón "ENVIAR MI UBICACIÓN" arriba de esta página. Se abre WhatsApp con tus coordenadas listas para enviar. Mándalo a cualquier número — familiar, grupo, desconocido.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-clinical-red rounded-2xl bg-red-50"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold" data-i18n="p5_2t">Conserva la batería — es tu vida</p><p class="text-sm text-on-surface-variant" data-i18n="p5_2d">Activa Modo Avión ahora mismo. Baja el brillo al mínimo. Cierra todas las apps. Enciende el teléfono solo cada 30 minutos. Cada % de batería es tiempo.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold" data-i18n="p5_3t">Señaliza tu posición</p><p class="text-sm text-on-surface-variant" data-i18n="p5_3d">Golpea una tubería o pared: TOC-TOC-TOC, pausa, TOC-TOC-TOC. Código universal de rescate. Repítelo cada vez que escuches ruido. Usa la linterna solo cuando escuches voces muy cerca.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">4</span><div><p class="font-bold" data-i18n="p5_4t">Protege tus vías respiratorias</p><p class="text-sm text-on-surface-variant" data-i18n="p5_4d">Cúbrete la nariz y boca con tela. Si hay polvo, respira despacio y poco profundo. No grites — agota el oxígeno. Escribe mensajes en vez de hablar.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">5</span><div><p class="font-bold text-clinical-red" data-i18n="p5_5t">NO hagas esto</p><p class="text-sm text-on-surface-variant" data-i18n="p5_5d">No muevas estructuras que te rodean. No encendas fuego. No intentes liberarte de un aplastamiento solo. Si tienes un miembro atrapado, NO lo jales bruscamente.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-gem-teal text-dark-navy w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">✓</span><div><p class="font-bold text-primary" data-i18n="p5_6t">Conserva energía y calma</p><p class="text-sm text-on-surface-variant" data-i18n="p5_6d">Respira lento y profundo. Si puedes, acuéstate. Los equipos de rescate de más de 20 países están en Venezuela ahora mismo buscándote.</p></div></div>
         <button onclick="sendSOS()" class="w-full mt-2 bg-gem-teal text-dark-navy py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-white transition-all active:scale-95">
-          <span class="material-symbols-outlined">location_on</span>ENVIAR MI UBICACIÓN AHORA
+          <span class="material-symbols-outlined">location_on</span><span data-i18n="sos_bar_btn">ENVIAR MI UBICACIÓN AHORA</span>
         </button>
-        <button onclick="openErgy('emergency')" class="w-full bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span>Hablar con Ergy ahora</button>
+        <button onclick="openErgy('emergency')" class="w-full bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span><span data-i18n="fa_ergy_btn">Guía en tiempo real con Ergy</span></button>
       </div>
 
-      <!-- Protocol 6: TORNIQUETE -->
+      <!-- Protocol 6: TOURNIQUET -->
       <div id="proto-p6" class="hidden space-y-4">
         <div class="bg-clinical-red/10 border border-clinical-red rounded-2xl p-4 mb-2">
-          <p class="font-bold text-clinical-red text-center">⚠️ El torniquete es el ÚLTIMO recurso.</p>
-          <p class="text-sm text-center text-on-surface-variant mt-1">Solo si hay sangrado masivo que no se detiene con presión directa en brazos o piernas.</p>
+          <p class="font-bold text-clinical-red text-center" data-i18n="p6_header">⚠️ El torniquete es el ÚLTIMO recurso.</p>
+          <p class="text-sm text-center text-on-surface-variant mt-1" data-i18n="p6_header_sub">Solo si hay sangrado masivo que no se detiene con presión directa en brazos o piernas.</p>
         </div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold">¿Cuándo hacerlo?</p><p class="text-sm text-on-surface-variant">Solo en extremidades (brazos o piernas). Nunca en cuello, torso o cabeza. Solo si presionaste fuerte durante 10 minutos y el sangrado no cede. Solo si el sangrado es tan severo que amenaza la vida en minutos.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-clinical-red rounded-2xl bg-red-50"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold">Improvisa el torniquete</p><p class="text-sm text-on-surface-variant">Usa: cinturón, corbata, tira de ropa resistente, cable — algo mínimo 3-4 cm de ancho. Nunca cordón delgado o alambre — corta la piel y los vasos.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold">Colócalo correctamente</p><p class="text-sm text-on-surface-variant">5 a 7 cm por encima de la herida — nunca sobre la herida. Pasa la tela alrededor del miembro dos veces. Ata un nudo. Pon un palo o lápiz encima del nudo. Ata otro nudo sobre el palo. Gira el palo hasta que el sangrado se detenga.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">4</span><div><p class="font-bold">ANOTA LA HORA — es crítico</p><p class="text-sm text-on-surface-variant">Escribe la hora exacta en la piel del paciente con lo que tengas — bolígrafo, marcador, incluso sangre. El médico NECESITA saber cuánto tiempo lleva puesto. Más de 2 horas aumenta riesgo de pérdida del miembro.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">5</span><div><p class="font-bold text-clinical-red">NO hagas esto</p><p class="text-sm text-on-surface-variant">No lo aflojes una vez puesto — puede ser fatal. No lo cubras — los rescatistas necesitan verlo. No uses cordón delgado, alambre, ni cuerda. No lo pongas en articulaciones (rodilla, codo).</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-amber-400 rounded-2xl bg-amber-50"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">!</span><div><p class="font-bold text-amber-700">Síndrome de aplastamiento — CRÍTICO</p><p class="text-sm text-on-surface-variant">Si tiene un miembro atrapado bajo escombros por más de 1 hora — NO lo liberes bruscamente sin ayuda médica. Al liberar puede haber una descarga de toxinas al torrente sanguíneo que cause paro cardíaco en minutos. Espera a los rescatistas o consulta a Ergy antes de actuar.</p></div></div>
-        <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span>Guía en tiempo real con Ergy</button>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold" data-i18n="p6_1t">¿Cuándo hacerlo?</p><p class="text-sm text-on-surface-variant" data-i18n="p6_1d">Solo en extremidades. Nunca en cuello, torso o cabeza. Solo si presionaste fuerte 10 minutos y el sangrado no cede.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-clinical-red rounded-2xl bg-red-50"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold" data-i18n="p6_2t">Improvisa el torniquete</p><p class="text-sm text-on-surface-variant" data-i18n="p6_2d">Usa: cinturón, corbata, tira de ropa resistente — mínimo 3-4 cm de ancho. Nunca cordón delgado o alambre.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold" data-i18n="p6_3t">Colócalo correctamente</p><p class="text-sm text-on-surface-variant" data-i18n="p6_3d">5–7 cm por encima de la herida. Pasa la tela dos veces. Ata un nudo. Pon un palo encima. Gira el palo hasta que el sangrado se detenga.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">4</span><div><p class="font-bold" data-i18n="p6_4t">ANOTA LA HORA — es crítico</p><p class="text-sm text-on-surface-variant" data-i18n="p6_4d">Escribe la hora en la piel del paciente. El médico NECESITA saber cuánto tiempo lleva puesto. Más de 2 horas aumenta riesgo de pérdida del miembro.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-clinical-red text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">5</span><div><p class="font-bold text-clinical-red" data-i18n="p6_5t">NO hagas esto</p><p class="text-sm text-on-surface-variant" data-i18n="p6_5d">No lo aflojes una vez puesto. No lo cubras. No uses cordón delgado o alambre. No lo pongas en articulaciones.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-amber-400 rounded-2xl bg-amber-50"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">!</span><div><p class="font-bold text-amber-700" data-i18n="p6_6t">Síndrome de aplastamiento — CRÍTICO</p><p class="text-sm text-on-surface-variant" data-i18n="p6_6d">Si tiene un miembro atrapado más de 1 hora — NO lo liberes bruscamente. Al liberar puede haber una descarga de toxinas que cause paro cardíaco. Espera a los rescatistas o consulta a Ergy.</p></div></div>
+        <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span><span data-i18n="fa_ergy_btn">Guía en tiempo real con Ergy</span></button>
       </div>
 
-      <!-- Protocol 7: INFECCIONES -->
+      <!-- Protocol 7: INFECTIONS -->
       <div id="proto-p7" class="hidden space-y-4">
         <div class="bg-amber-50 border border-amber-400 rounded-2xl p-4 mb-2">
-          <p class="font-bold text-amber-700 text-center">⚠️ Las próximas 72 horas son críticas para las infecciones.</p>
-          <p class="text-sm text-center text-on-surface-variant mt-1">Una herida no tratada puede infectarse en horas en condiciones de escombros.</p>
+          <p class="font-bold text-amber-700 text-center" data-i18n="p7_header">⚠️ Las próximas 72 horas son críticas para las infecciones.</p>
+          <p class="text-sm text-center text-on-surface-variant mt-1" data-i18n="p7_header_sub">Una herida no tratada puede infectarse en horas en condiciones de escombros.</p>
         </div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold">Limpia la herida ahora — sin antiséptico</p><p class="text-sm text-on-surface-variant">Usa agua limpia — embotellada si tienes, o agua de cualquier recipiente. Lava con presión directa durante al menos 5 minutos. Más agua es mejor que cualquier antiséptico. Retira suciedad visible con un paño limpio — sin frotar.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-amber-400 rounded-2xl bg-amber-50"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold">Si tienes alcohol o agua oxigenada</p><p class="text-sm text-on-surface-variant">Úsalo UNA vez para limpiar los bordes — no adentro de la herida. El alcohol dentro de la herida daña el tejido y retrasa la curación. Agua oxigenada solo en heridas superficiales.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold">Cubre e improvisa un vendaje</p><p class="text-sm text-on-surface-variant">Usa tela limpia — camiseta interior, sábana. Si no tienes nada limpio, usa lo más limpio que tengas. Cámbialo cada 12 horas si puedes. Mantén la herida cubierta — el aire no es mejor.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">4</span><div><p class="font-bold">Señales de infección — actúa de inmediato</p><p class="text-sm text-on-surface-variant">Alerta si ves: enrojecimiento que se expande alrededor de la herida, calor intenso en la zona, pus o líquido amarillo/verde, olor fuerte, líneas rojas que salen de la herida (muy urgente), fiebre mayor de 38.5°C, confusión o delirio.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">5</span><div><p class="font-bold">Heridas de aplastamiento — riesgo especial</p><p class="text-sm text-on-surface-variant">Las heridas por escombros tienen tierra, polvo y bacterias profundas. Son las más propensas a infecciones graves como tétanos y gangrena. Necesitan atención médica urgente — no esperes a que empeoren. Si ves tejido oscuro o negro alrededor de la herida, es una emergencia.</p></div></div>
-        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">6</span><div><p class="font-bold">Fiebre post-trauma</p><p class="text-sm text-on-surface-variant">Fiebre en las primeras 24h después de un trauma puede ser normal. Fiebre después de 24–48h es señal de infección. Si hay fiebre alta con confusión, rigidez en el cuello o sarpullido — es una emergencia crítica. Busca ayuda médica inmediatamente.</p></div></div>
-        <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span>Guía en tiempo real con Ergy</button>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">1</span><div><p class="font-bold" data-i18n="p7_1t">Limpia la herida — sin antiséptico</p><p class="text-sm text-on-surface-variant" data-i18n="p7_1d">Usa agua limpia. Lava con presión directa al menos 5 minutos. Más agua es mejor que cualquier antiséptico. Retira suciedad visible sin frotar.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-amber-400 rounded-2xl bg-amber-50"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">2</span><div><p class="font-bold" data-i18n="p7_2t">Si tienes alcohol o agua oxigenada</p><p class="text-sm text-on-surface-variant" data-i18n="p7_2d">Úsalo UNA vez en los bordes — nunca adentro de la herida. El alcohol dentro daña el tejido. Agua oxigenada solo en heridas superficiales.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">3</span><div><p class="font-bold" data-i18n="p7_3t">Cubre e improvisa un vendaje</p><p class="text-sm text-on-surface-variant" data-i18n="p7_3d">Usa tela limpia — camiseta, sábana. Cámbialo cada 12 horas. Mantén la herida cubierta — el aire no es mejor.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">4</span><div><p class="font-bold" data-i18n="p7_4t">Señales de infección — actúa de inmediato</p><p class="text-sm text-on-surface-variant" data-i18n="p7_4d">Alerta: enrojecimiento que se expande, calor intenso, pus amarillo/verde, olor fuerte, líneas rojas saliendo de la herida (muy urgente), fiebre mayor de 38.5°C, confusión.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">5</span><div><p class="font-bold" data-i18n="p7_5t">Heridas de aplastamiento — riesgo especial</p><p class="text-sm text-on-surface-variant" data-i18n="p7_5d">Las heridas por escombros tienen bacterias profundas. Riesgo de tétanos y gangrena. Necesitan atención médica urgente. Si ves tejido oscuro o negro, es una emergencia.</p></div></div>
+        <div class="flex gap-4 items-start p-4 border border-outline-variant rounded-2xl"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm">6</span><div><p class="font-bold" data-i18n="p7_6t">Fiebre post-trauma</p><p class="text-sm text-on-surface-variant" data-i18n="p7_6d">Fiebre primeras 24h puede ser normal. Después de 24–48h es señal de infección. Con confusión, rigidez en el cuello o sarpullido — emergencia crítica. Busca ayuda médica.</p></div></div>
+        <button onclick="openErgy('emergency')" class="w-full mt-2 bg-clinical-red text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-700 transition-all active:scale-95"><span class="material-symbols-outlined">robot_2</span><span data-i18n="fa_ergy_btn">Guía en tiempo real con Ergy</span></button>
       </div>
 
     </div>
@@ -516,7 +599,7 @@ const T = {
     nav_consult:'Consulta',nav_firstaid:'Primeros Auxilios',nav_emergency:'Emergencia',
     banner_title:'Protocolo de Emergencia Activo',banner_sub:'Triage inmediato con IA — funciona con conectividad limitada.',banner_btn:'INICIAR PROTOCOLO',
     hero_badge:'Ergy: Tu Apoyo Biomédico Inteligente',
-    hero_h1:'Atención de Clase Mundial,<br><span class="font-extrabold italic text-gem-teal">Paso a Paso.</span>',
+    hero_h1:'Atención Médica,<br><span class="font-extrabold italic text-gem-teal">Paso a Paso.</span>',
     hero_sub:'Triage multiespecialidad con IA para emergencias y apoyo clínico remoto — impulsada por Redes Neuronales de Grado Clínico.',
     hero_btn1:'Hablar con Ergy',hero_btn2:'Guías de Primeros Auxilios',
     card_title:'Consulta con Ergy AI',card_sub:'Apoyo clínico instantáneo en todas las especialidades — conectando vidas con experiencia médica de clase mundial, donde estés.',card_btn:'Consultar Ahora',
@@ -526,7 +609,9 @@ const T = {
     gem2_title:'Signos Vitales',gem2_sub:'Ingresa los valores del paciente para interpretación inmediata.',
     gem3_title:'Primeros Auxilios',gem3_sub:'RCP, hemorragia, asfixia, quemaduras — paso a paso.',
     fa_eyebrow:'Protocolos de Emergencia',fa_title:'Guías de Primeros Auxilios',fa_sub:'Paso a paso para las emergencias más críticas. Funciona sin internet.',
-    tab1:'RCP',tab2:'Control de sangrado',tab3:'Asfixia',tab4:'Quemaduras',fa_ergy_btn:'Guía en tiempo real con Ergy',
+    tab1:'RCP',tab2:'Control de sangrado',tab3:'Asfixia',tab4:'Quemaduras',tab5:'🆘 Estoy atrapado',tab6:'Torniquete',tab7:'Infecciones',fa_ergy_btn:'Guía en tiempo real con Ergy',
+    sos_bar_title:'¿ESTÁS ATRAPADO?',sos_bar_sub:'Envía tu ubicación exacta a los rescatistas — un solo toque.',sos_bar_btn:'ENVIAR MI UBICACIÓN AHORA',
+    sos_modal_title:'Enviando tu ubicación',sos_modal_getting:'Obteniendo coordenadas GPS...',sos_modal_ready:'✅ Ubicación obtenida. Elige cómo enviarla:',sos_modal_whatsapp:'Enviar por WhatsApp',sos_modal_sms:'Enviar por SMS',sos_modal_coords:'Tus coordenadas:',sos_modal_copy:'Copiar coordenadas',sos_modal_copied:'¡Copiado!',sos_modal_tip:'Conserva batería: activa Modo Avión después de enviar.',sos_modal_close:'Cerrar',sos_modal_nogps:'GPS no disponible. Copia tu ubicación manualmente de Google Maps.',sos_msg_prefix:'🆘 ESTOY ATRAPADO - NECESITO RESCATE\n\nMi ubicación exacta:\n📍 ',sos_msg_suffix:'\n\nAbierto con CDxGems.doctor',
     cpr1_t:'Verifica respuesta',cpr1_d:'Sacude los hombros y llama en voz alta. Si no responde, llama a emergencias.',
     cpr2_t:'Ritmo de compresiones',cpr2_d:'100–120 por minuto. Presiona fuerte — mínimo 5 cm en el centro del pecho.',
     cpr3_t:'Respiraciones de rescate',cpr3_d:'30 compresiones → 2 respiraciones. Inclina la cabeza, levanta el mentón.',
@@ -551,7 +636,10 @@ const T = {
     v_notes:'Condiciones conocidas / alergias',v_notes_ph:'Ej: diabético, alérgico a penicilina…',vitals_btn:'Evaluar con Ergy',
     footer_desc:'Salud de emergencia con IA para Venezuela y comunidades sin acceso médico.',footer_general:'Consulta general',footer_emergency:'Emergencia',footer_vitals:'Signos vitales',footer_legal_title:'Legal',footer_terms:'Términos de Uso',footer_privacy:'Privacidad',
     footer_copy:'© 2026 CDxGems · Sheyene Gerardi Foundation. Ergy AI es una herramienta de apoyo clínico — no reemplaza la atención médica profesional.',
-    ergy_status_general:'Asistente clínico multiespecialidad',ergy_status_emergency:'🔴 Modo emergencia activo',ergy_status_vitals:'Interpretación de signos vitales',
+    nasa_eyebrow:'Programa de Desastres de NASA · Datos Satelitales en Vivo',nasa_title:'Venezuela — Mapa Satelital del Terremoto',nasa_sub:'Evaluación de daños en tiempo real, detección de deslizamientos y apagones con satélites de NASA.',nasa_map_title:'Datos Satelitales de NASA — Terremoto Venezuela Junio 2026',nasa_map_sub:'Mapas de daño en tiempo real, deslizamientos, apagones y deformación del terreno capturados por satélites de NASA. Datos gratuitos y de acceso público.',nasa_btn1:'Abrir Portal de Desastres NASA',nasa_btn2:'Mapa en vivo',nasa_btn3:'Estimación de Daño a Edificios',nasa_p1_title:'Imágenes Satelitales',nasa_p1_sub:'Vista área de daños',nasa_p2_title:'Apagones',nasa_p2_sub:'Datos de luces nocturnas',nasa_p3_title:'Riesgo de Deslizamiento',nasa_p3_sub:'Detección de zonas de alto riesgo',nasa_p4_title:'Daño a Edificios',nasa_p4_sub:'Evaluación de infraestructura',nasa_credit:'Datos del Programa de Desastres de NASA · maps.disasters.nasa.gov · Acceso gratuito y público',
+    p5_header:'Si estás atrapado, estás vivo. Eso es lo más importante.',p5_header_sub:'Sigue estos pasos exactamente.',p5_1t:'Envía tu ubicación AHORA',p5_1d:'Usa el botón "ENVIAR MI UBICACIÓN" arriba. Se abre WhatsApp con tus coordenadas. Mándalo a cualquier número.',p5_2t:'Conserva la batería — es tu vida',p5_2d:'Activa Modo Avión. Baja el brillo al mínimo. Enciende solo cada 30 minutos.',p5_3t:'Señaliza tu posición',p5_3d:'Golpea: TOC-TOC-TOC, pausa, TOC-TOC-TOC. Código universal de rescate.',p5_4t:'Protege tus vías respiratorias',p5_4d:'Cúbrete nariz y boca. Respira despacio. No grites — agota el oxígeno.',p5_5t:'NO hagas esto',p5_5d:'No muevas estructuras. No enciendas fuego. No jales un miembro atrapado bruscamente.',p5_6t:'Conserva energía y calma',p5_6d:'Respira lento. Si puedes, acuéstate. Rescatistas de 20 países están buscándote.',
+    p6_header:'⚠️ El torniquete es el ÚLTIMO recurso.',p6_header_sub:'Solo si hay sangrado masivo que no cede con presión directa en brazos o piernas.',p6_1t:'¿Cuándo hacerlo?',p6_1d:'Solo en extremidades. Nunca en cuello, torso o cabeza. Solo si presionaste 10 minutos y no cede.',p6_2t:'Improvisa el torniquete',p6_2d:'Cinturón, corbata, tira de ropa — mínimo 3-4 cm de ancho. Nunca cordón delgado o alambre.',p6_3t:'Colócalo correctamente',p6_3d:'5–7 cm por encima de la herida. Pasa la tela dos veces. Ata un nudo. Pon un palo encima. Gira hasta detener el sangrado.',p6_4t:'ANOTA LA HORA — es crítico',p6_4d:'Escribe la hora en la piel del paciente. El médico NECESITA saberlo. Más de 2 horas aumenta riesgo de pérdida del miembro.',p6_5t:'NO hagas esto',p6_5d:'No lo aflojes. No lo cubras. No uses cordón delgado. No lo pongas en articulaciones.',p6_6t:'Síndrome de aplastamiento — CRÍTICO',p6_6d:'Miembro atrapado más de 1 hora — NO lo liberes bruscamente. Puede causar paro cardíaco. Espera a los rescatistas.',
+    p7_header:'⚠️ Las próximas 72 horas son críticas para las infecciones.',p7_header_sub:'Una herida no tratada puede infectarse en horas en condiciones de escombros.',p7_1t:'Limpia la herida — sin antiséptico',p7_1d:'Agua limpia, presión directa, 5 minutos mínimo. Más agua es mejor que cualquier antiséptico.',p7_2t:'Si tienes alcohol o agua oxigenada',p7_2d:'UNA vez en los bordes — nunca adentro. El alcohol dentro daña el tejido.',p7_3t:'Cubre e improvisa un vendaje',p7_3d:'Tela limpia. Cámbialo cada 12 horas. La herida debe estar cubierta.',p7_4t:'Señales de infección — actúa de inmediato',p7_4d:'Enrojecimiento que se expande, pus, olor fuerte, líneas rojas (muy urgente), fiebre +38.5°C, confusión.',p7_5t:'Heridas de aplastamiento — riesgo especial',p7_5d:'Riesgo de tétanos y gangrena. Atención médica urgente. Tejido oscuro o negro = emergencia.',p7_6t:'Fiebre post-trauma',p7_6d:'Fiebre después de 24–48h es infección. Con confusión o rigidez en el cuello = emergencia crítica.',
     welcome_general:'Hola. Soy Ergy, tu asistente clínico con IA. Puedo ayudarte a evaluar síntomas, guiarte en procedimientos y darte apoyo multiespecialidad. ¿Cuál es la situación del paciente?',
     welcome_emergency:'⚠️ Modo emergencia activo. Descríbeme la emergencia ahora — ¿qué está pasando con el paciente? Te daré instrucciones inmediatas.',
     thinking:'Evaluando…',no_conn:'Sin conexión. Usa los protocolos de primeros auxilios de la página principal.',no_vitals:'Por favor ingresa al menos un signo vital.',analyzing:'Analizando signos vitales…',vitals_offline:'Sin conexión. Referencia normal: FC 60–100 lpm, Temp 36–37.5°C, PA 90/60–120/80, SpO₂ ≥95%.',
@@ -564,7 +652,7 @@ const T = {
     nav_consult:'Consultation',nav_firstaid:'First Aid',nav_emergency:'Emergency',
     banner_title:'Active Emergency Protocol',banner_sub:'Immediate AI triage — works with limited connectivity.',banner_btn:'START PROTOCOL',
     hero_badge:'Ergy: Your Smart Biomed Support',
-    hero_h1:'World-Class Care,<br><span class="font-extrabold italic text-gem-teal">Step-By-Step.</span>',
+    hero_h1:'Medical Care,<br><span class="font-extrabold italic text-gem-teal">Step-By-Step.</span>',
     hero_sub:'Multi-specialty AI triage for emergencies and remote clinical support — powered by Clinical-Grade Neural Networks.',
     hero_btn1:'Chat with Ergy',hero_btn2:'First Aid Guides',
     card_title:'Consult Ergy AI',card_sub:'Instant clinical support across specialties — connecting lives to world-class expertise, wherever you are.',card_btn:'Consult Now',
@@ -574,7 +662,9 @@ const T = {
     gem2_title:'Vital Signs',gem2_sub:'Enter patient values for immediate AI interpretation.',
     gem3_title:'First Aid',gem3_sub:'CPR, hemorrhage, choking, burns — step by step.',
     fa_eyebrow:'Emergency Protocols',fa_title:'First Aid Guides',fa_sub:'Step-by-step for the most critical emergencies. Works offline. Share this page.',
-    tab1:'CPR',tab2:'Bleeding control',tab3:'Choking',tab4:'Burns',fa_ergy_btn:'Get live guidance from Ergy',
+    tab1:'CPR',tab2:'Bleeding control',tab3:'Choking',tab4:'Burns',tab5:'🆘 I\'m Trapped',tab6:'Tourniquet',tab7:'Infections',fa_ergy_btn:'Get live guidance from Ergy',
+    sos_bar_title:'ARE YOU TRAPPED?',sos_bar_sub:'Send your exact location to rescuers — one tap.',sos_bar_btn:'SEND MY LOCATION NOW',
+    sos_modal_title:'Sending your location',sos_modal_getting:'Getting GPS coordinates...',sos_modal_ready:'✅ Location found. Choose how to send it:',sos_modal_whatsapp:'Send via WhatsApp',sos_modal_sms:'Send via SMS',sos_modal_coords:'Your coordinates:',sos_modal_copy:'Copy coordinates',sos_modal_copied:'Copied!',sos_modal_tip:'Save battery: turn on Airplane Mode after sending.',sos_modal_close:'Close',sos_modal_nogps:'GPS unavailable. Copy your location manually from Google Maps.',sos_msg_prefix:'🆘 I\'M TRAPPED - I NEED RESCUE\n\nMy exact location:\n📍 ',sos_msg_suffix:'\n\nOpened with CDxGems.doctor',
     cpr1_t:'Check responsiveness',cpr1_d:'Tap shoulders and shout. If no response, call emergency services immediately.',
     cpr2_t:'Compression rhythm',cpr2_d:'100–120 compressions per minute. Press hard — at least 5 cm deep in center of chest.',
     cpr3_t:'Rescue breaths (if trained)',cpr3_d:'30 compressions → 2 breaths. Tilt head, lift chin, seal mouth.',
@@ -599,7 +689,10 @@ const T = {
     v_notes:'Known conditions / allergies',v_notes_ph:'E.g. diabetic, allergic to penicillin…',vitals_btn:'Evaluate with Ergy',
     footer_desc:'Emergency AI healthcare for Venezuela and communities without sufficient medical access.',footer_general:'General consultation',footer_emergency:'Emergency',footer_vitals:'Vital signs',footer_legal_title:'Legal',footer_terms:'Terms of Use',footer_privacy:'Privacy',
     footer_copy:'© 2026 CDxGems. Ergy AI is a clinical support tool — not a substitute for professional medical care.',
-    ergy_status_general:'Multi-specialty clinical assistant',ergy_status_emergency:'🔴 Emergency mode active',ergy_status_vitals:'Vital signs interpretation',
+    nasa_eyebrow:'NASA Disasters Program · Live Satellite Data',nasa_title:'Venezuela Earthquake — Satellite Map',nasa_sub:'Real-time damage assessment, landslide detection and power outage data from NASA satellites.',nasa_map_title:'NASA Satellite Data — Venezuela Earthquake June 2026',nasa_map_sub:'View real-time damage maps, landslide detection, power outages and land deformation captured by NASA satellites. Data is free and publicly available.',nasa_btn1:'Open NASA Disasters Portal',nasa_btn2:'Live Map',nasa_btn3:'Building Damage Estimates',nasa_p1_title:'Satellite Imagery',nasa_p1_sub:"Bird's-eye damage view",nasa_p2_title:'Power Outages',nasa_p2_sub:'Nighttime lights data',nasa_p3_title:'Landslide Risk',nasa_p3_sub:'High-risk zone detection',nasa_p4_title:'Building Damage',nasa_p4_sub:'Infrastructure assessment',nasa_credit:'Data provided by NASA Disasters Program · maps.disasters.nasa.gov · Free and open access',
+    p5_header:'If you are trapped, you are alive. That is what matters most.',p5_header_sub:'Follow these steps exactly.',p5_1t:'Send your location NOW',p5_1d:'Use the "SEND MY LOCATION" button above. It opens WhatsApp with your coordinates ready. Send it to any number.',p5_2t:'Save your battery — it is your life',p5_2d:'Turn on Airplane Mode now. Minimum brightness. Only turn on every 30 minutes to check messages.',p5_3t:'Signal your position',p5_3d:'Knock: TAP-TAP-TAP, pause, TAP-TAP-TAP. Universal rescue signal. Repeat when you hear noise.',p5_4t:'Protect your airways',p5_4d:'Cover your nose and mouth with cloth. Breathe slowly. Do not shout — it wastes oxygen.',p5_5t:'Do NOT do this',p5_5d:'Do not move surrounding structures. Do not light fire. Do not jerk a trapped limb suddenly.',p5_6t:'Save energy and stay calm',p5_6d:'Breathe slowly. Lie down if you can. Rescue teams from 20+ countries are looking for you right now.',
+    p6_header:'⚠️ A tourniquet is the LAST resort.',p6_header_sub:'Only for massive bleeding that does not stop with direct pressure on arms or legs.',p6_1t:'When to use it?',p6_1d:'Only on limbs. Never on neck, torso or head. Only if you pressed hard for 10 minutes and bleeding does not stop.',p6_2t:'Improvise the tourniquet',p6_2d:'Belt, tie, strong strip of clothing — minimum 3-4 cm wide. Never thin cord or wire.',p6_3t:'Apply it correctly',p6_3d:'5–7 cm above the wound. Wrap the cloth twice. Tie a knot. Place a stick on the knot. Twist until bleeding stops.',p6_4t:'NOTE THE TIME — critical',p6_4d:'Write the exact time on the patient\'s skin. The doctor NEEDS to know. Over 2 hours increases risk of limb loss.',p6_5t:'Do NOT do this',p6_5d:'Do not loosen once applied. Do not cover it. Do not use thin cord or wire. Do not apply over joints.',p6_6t:'Crush Syndrome — CRITICAL',p6_6d:'Limb trapped over 1 hour — do NOT release suddenly. It can cause cardiac arrest. Wait for rescuers or ask Ergy.',
+    p7_header:'⚠️ The next 72 hours are critical for infections.',p7_header_sub:'An untreated wound can become infected within hours in rubble conditions.',p7_1t:'Clean the wound — no antiseptic needed',p7_1d:'Use clean water. Direct pressure, at least 5 minutes. More water is better than any antiseptic.',p7_2t:'If you have alcohol or hydrogen peroxide',p7_2d:'Use it ONCE on the edges — never inside the wound. Alcohol inside damages tissue.',p7_3t:'Cover and improvise a bandage',p7_3d:'Clean cloth. Change every 12 hours. Keep the wound covered — open air is not better.',p7_4t:'Signs of infection — act immediately',p7_4d:'Spreading redness, pus, strong smell, red lines from wound (very urgent), fever over 38.5°C, confusion.',p7_5t:'Crush wounds — special risk',p7_5d:'Risk of tetanus and gangrene. Urgent medical care needed. Dark or black tissue = emergency.',p7_6t:'Post-trauma fever',p7_6d:'Fever after 24–48h means infection. With confusion or neck stiffness = critical emergency.',
     welcome_general:'Hello. I\'m Ergy, your clinical AI assistant. I can help assess symptoms, guide you through procedures, and provide multi-specialty support. What is the patient\'s situation?',
     welcome_emergency:'⚠️ Emergency mode active. Describe the emergency now — what is happening with the patient? I will give you immediate step-by-step instructions.',
     thinking:'Evaluating…',no_conn:'No connection. Use the first aid protocols on the main page.',no_vitals:'Please enter at least one vital sign.',analyzing:'Analyzing vital signs…',vitals_offline:'Offline. Normal ranges: HR 60–100 bpm, Temp 36–37.5°C, BP 90/60–120/80, SpO₂ ≥95%.',
@@ -612,7 +705,7 @@ const T = {
     nav_consult:'Consulta',nav_firstaid:'Primeiros Socorros',nav_emergency:'Emergência',
     banner_title:'Protocolo de Emergência Ativo',banner_sub:'Triagem imediata com IA — funciona com conectividade limitada.',banner_btn:'INICIAR PROTOCOLO',
     hero_badge:'Ergy: Seu Suporte Biomédico Inteligente',
-    hero_h1:'Cuidado de Classe Mundial,<br><span class="font-extrabold italic text-gem-teal">Passo a Passo.</span>',
+    hero_h1:'Cuidado Médico,<br><span class="font-extrabold italic text-gem-teal">Passo a Passo.</span>',
     hero_sub:'Triagem multiespecialidade com IA para emergências e suporte clínico remoto — para comunidades sem acesso médico suficiente.',
     hero_btn1:'Falar com Ergy',hero_btn2:'Guias de Primeiros Socorros',
     card_title:'Consulte o Ergy AI',card_sub:'Triagem multiespecialidade. Para zonas com acesso médico limitado.',card_btn:'Consultar Agora',
@@ -622,7 +715,9 @@ const T = {
     gem2_title:'Sinais Vitais',gem2_sub:'Insira os valores do paciente para interpretação imediata.',
     gem3_title:'Primeiros Socorros',gem3_sub:'RCP, hemorragia, asfixia, queimaduras — passo a passo.',
     fa_eyebrow:'Protocolos de Emergência',fa_title:'Guias de Primeiros Socorros',fa_sub:'Passo a passo para as emergências mais críticas. Funciona sem internet.',
-    tab1:'RCP',tab2:'Controle de sangramento',tab3:'Asfixia',tab4:'Queimaduras',fa_ergy_btn:'Orientação em tempo real com Ergy',
+    tab1:'RCP',tab2:'Controle de sangramento',tab3:'Asfixia',tab4:'Queimaduras',tab5:'🆘 Estou preso',tab6:'Torniquete',tab7:'Infecções',fa_ergy_btn:'Orientação em tempo real com Ergy',
+    sos_bar_title:'VOCÊ ESTÁ PRESO?',sos_bar_sub:'Envie sua localização exata aos socorristas — um toque.',sos_bar_btn:'ENVIAR MINHA LOCALIZAÇÃO AGORA',
+    sos_modal_title:'Enviando sua localização',sos_modal_getting:'Obtendo coordenadas GPS...',sos_modal_ready:'✅ Localização encontrada. Escolha como enviar:',sos_modal_whatsapp:'Enviar pelo WhatsApp',sos_modal_sms:'Enviar por SMS',sos_modal_coords:'Suas coordenadas:',sos_modal_copy:'Copiar coordenadas',sos_modal_copied:'Copiado!',sos_modal_tip:'Economize bateria: ative o Modo Avião após enviar.',sos_modal_close:'Fechar',sos_modal_nogps:'GPS indisponível. Copie sua localização manualmente do Google Maps.',sos_msg_prefix:'🆘 ESTOU PRESO - PRECISO DE RESGATE\n\nMinha localização exata:\n📍 ',sos_msg_suffix:'\n\nAberto com CDxGems.doctor',
     cpr1_t:'Verifique a resposta',cpr1_d:'Sacuda os ombros e chame em voz alta. Se não responder, ligue para emergências.',
     cpr2_t:'Ritmo de compressões',cpr2_d:'100–120 por minuto. Pressione fundo — mínimo 5 cm no centro do peito.',
     cpr3_t:'Respirações de resgate',cpr3_d:'30 compressões → 2 respirações. Incline a cabeça, levante o queixo.',
@@ -647,7 +742,10 @@ const T = {
     v_notes:'Condições conhecidas / alergias',v_notes_ph:'Ex: diabético, alérgico à penicilina…',vitals_btn:'Avaliar com Ergy',
     footer_desc:'Saúde de emergência com IA para comunidades sem acesso médico suficiente.',footer_general:'Consulta geral',footer_emergency:'Emergência',footer_vitals:'Sinais vitais',footer_legal_title:'Legal',footer_terms:'Termos de Uso',footer_privacy:'Privacidade',
     footer_copy:'© 2026 CDxGems. Ergy AI é uma ferramenta de suporte clínico — não substitui o atendimento médico profissional.',
-    ergy_status_general:'Assistente clínico multiespecialidade',ergy_status_emergency:'🔴 Modo emergência ativo',ergy_status_vitals:'Interpretação de sinais vitais',
+    nasa_eyebrow:'Programa de Desastres da NASA · Dados Satelitais ao Vivo',nasa_title:'Venezuela — Mapa Satelital do Terremoto',nasa_sub:'Avaliação de danos em tempo real, detecção de deslizamentos e falta de energia com satélites da NASA.',nasa_map_title:'Dados Satelitais da NASA — Terremoto Venezuela Junho 2026',nasa_map_sub:'Mapas de danos em tempo real, deslizamentos, apagões e deformação do terreno capturados por satélites da NASA. Dados gratuitos e de acesso público.',nasa_btn1:'Abrir Portal de Desastres NASA',nasa_btn2:'Mapa ao Vivo',nasa_btn3:'Estimativa de Danos a Edifícios',nasa_p1_title:'Imagens Satelitais',nasa_p1_sub:'Vista aérea dos danos',nasa_p2_title:'Apagões',nasa_p2_sub:'Dados de luzes noturnas',nasa_p3_title:'Risco de Deslizamento',nasa_p3_sub:'Detecção de zonas de alto risco',nasa_p4_title:'Danos a Edifícios',nasa_p4_sub:'Avaliação de infraestrutura',nasa_credit:'Dados do Programa de Desastres da NASA · maps.disasters.nasa.gov · Acesso gratuito e público',
+    p5_header:'Se você está preso, está vivo. Isso é o mais importante.',p5_header_sub:'Siga estes passos exatamente.',p5_1t:'Envie sua localização AGORA',p5_1d:'Use o botão "ENVIAR MINHA LOCALIZAÇÃO" acima. Abre o WhatsApp com suas coordenadas. Envie para qualquer número.',p5_2t:'Economize a bateria — é sua vida',p5_2d:'Ative o Modo Avião. Brilho mínimo. Ligue apenas a cada 30 minutos.',p5_3t:'Sinalize sua posição',p5_3d:'Bata: TAC-TAC-TAC, pausa, TAC-TAC-TAC. Código universal de resgate.',p5_4t:'Proteja suas vias aéreas',p5_4d:'Cubra nariz e boca com pano. Respire devagar. Não grite — gasta oxigênio.',p5_5t:'NÃO faça isso',p5_5d:'Não mova estruturas. Não acenda fogo. Não puxe um membro preso bruscamente.',p5_6t:'Economize energia e mantenha a calma',p5_6d:'Respire devagar. Deite se puder. Equipes de resgate de 20 países estão procurando por você.',
+    p6_header:'⚠️ O torniquete é o ÚLTIMO recurso.',p6_header_sub:'Apenas para sangramento massivo que não para com pressão direta em braços ou pernas.',p6_1t:'Quando usar?',p6_1d:'Apenas em membros. Nunca em pescoço, tronco ou cabeça. Apenas se pressionou 10 minutos sem resultado.',p6_2t:'Improvise o torniquete',p6_2d:'Cinto, gravata, tira de roupa — mínimo 3-4 cm de largura. Nunca cordão fino ou arame.',p6_3t:'Aplique corretamente',p6_3d:'5–7 cm acima do ferimento. Enrole o pano duas vezes. Dê um nó. Coloque um graveto. Gire até o sangramento parar.',p6_4t:'ANOTE A HORA — é crítico',p6_4d:'Escreva a hora na pele do paciente. O médico PRECISA saber. Mais de 2 horas aumenta risco de perda do membro.',p6_5t:'NÃO faça isso',p6_5d:'Não afroufe depois de aplicado. Não cubra. Não use cordão fino. Não coloque em articulações.',p6_6t:'Síndrome de esmagamento — CRÍTICO',p6_6d:'Membro preso há mais de 1 hora — NÃO libere bruscamente. Pode causar parada cardíaca. Aguarde os socorristas.',
+    p7_header:'⚠️ As próximas 72 horas são críticas para infecções.',p7_header_sub:'Um ferimento não tratado pode infeccionar em horas em condições de escombros.',p7_1t:'Limpe o ferimento — sem antisséptico',p7_1d:'Água limpa, pressão direta, mínimo 5 minutos. Mais água é melhor que qualquer antisséptico.',p7_2t:'Se tiver álcool ou água oxigenada',p7_2d:'USE UMA VEZ nas bordas — nunca dentro do ferimento. O álcool dentro danifica o tecido.',p7_3t:'Cubra e improvise um curativo',p7_3d:'Pano limpo. Troque a cada 12 horas. Mantenha o ferimento coberto.',p7_4t:'Sinais de infecção — aja imediatamente',p7_4d:'Vermelhidão que se expande, pus, cheiro forte, linhas vermelhas (muito urgente), febre +38.5°C, confusão.',p7_5t:'Ferimentos de esmagamento — risco especial',p7_5d:'Risco de tétano e gangrena. Atenção médica urgente. Tecido escuro ou preto = emergência.',p7_6t:'Febre pós-trauma',p7_6d:'Febre após 24–48h indica infecção. Com confusão ou rigidez no pescoço = emergência crítica.',
     welcome_general:'Olá. Sou Ergy, seu assistente clínico com IA. Posso ajudar a avaliar sintomas, orientar procedimentos e dar suporte multiespecialidade. Qual é a situação do paciente?',
     welcome_emergency:'⚠️ Modo emergência ativo. Descreva a emergência agora — o que está acontecendo com o paciente? Darei instruções imediatas.',
     thinking:'Avaliando…',no_conn:'Sem conexão. Use os protocolos de primeiros socorros na página principal.',no_vitals:'Por favor insira pelo menos um sinal vital.',analyzing:'Analisando sinais vitais…',vitals_offline:'Sem conexão. Referência normal: FC 60–100 bpm, Temp 36–37.5°C, PA 90/60–120/80, SpO₂ ≥95%.',
@@ -660,7 +758,7 @@ const T = {
     nav_consult:'Consultation',nav_firstaid:'Premiers Secours',nav_emergency:'Urgence',
     banner_title:'Protocole d\'Urgence Actif',banner_sub:'Triage immédiat par IA — fonctionne avec une connectivité limitée.',banner_btn:'DÉMARRER LE PROTOCOLE',
     hero_badge:'Ergy: Votre Soutien Biomédical Intelligent',
-    hero_h1:'Soins de Classe Mondiale,<br><span class="font-extrabold italic text-gem-teal">Étape par Étape.</span>',
+    hero_h1:'Soins Médicaux,<br><span class="font-extrabold italic text-gem-teal">Étape par Étape.</span>',
     hero_sub:'Triage multispécialité par IA pour les urgences et le soutien clinique à distance.',
     hero_btn1:'Parler à Ergy',hero_btn2:'Guides de Premiers Secours',
     card_title:'Consulter Ergy AI',card_sub:'Triage multispécialité. Conçu pour les zones à accès médical limité.',card_btn:'Consulter Maintenant',
@@ -670,7 +768,9 @@ const T = {
     gem2_title:'Signes Vitaux',gem2_sub:'Entrez les valeurs du patient pour une interprétation immédiate.',
     gem3_title:'Premiers Secours',gem3_sub:'RCP, hémorragie, étouffement, brûlures — étape par étape.',
     fa_eyebrow:'Protocoles d\'Urgence',fa_title:'Guides de Premiers Secours',fa_sub:'Étape par étape pour les urgences les plus critiques. Fonctionne hors ligne.',
-    tab1:'RCP',tab2:'Contrôle du saignement',tab3:'Étouffement',tab4:'Brûlures',fa_ergy_btn:'Guidance en direct avec Ergy',
+    tab1:'RCP',tab2:'Contrôle du saignement',tab3:'Étouffement',tab4:'Brûlures',tab5:'🆘 Je suis coincé',tab6:'Garrot',tab7:'Infections',fa_ergy_btn:'Guidance en direct avec Ergy',
+    sos_bar_title:'ÊTES-VOUS COINCÉ?',sos_bar_sub:'Envoyez votre localisation exacte aux secouristes — en un tap.',sos_bar_btn:'ENVOYER MA LOCALISATION',
+    sos_modal_title:'Envoi de votre localisation',sos_modal_getting:'Obtention des coordonnées GPS...',sos_modal_ready:'✅ Localisation trouvée. Choisissez comment l\'envoyer:',sos_modal_whatsapp:'Envoyer par WhatsApp',sos_modal_sms:'Envoyer par SMS',sos_modal_coords:'Vos coordonnées:',sos_modal_copy:'Copier les coordonnées',sos_modal_copied:'Copié!',sos_modal_tip:'Économisez la batterie: activez le Mode Avion après l\'envoi.',sos_modal_close:'Fermer',sos_modal_nogps:'GPS indisponible. Copiez votre localisation manuellement depuis Google Maps.',sos_msg_prefix:'🆘 JE SUIS COINCÉ - J\'AI BESOIN DE SECOURS\n\nMa localisation exacte:\n📍 ',sos_msg_suffix:'\n\nOuvert avec CDxGems.doctor',
     cpr1_t:'Vérifiez la réponse',cpr1_d:'Tapez les épaules et appelez. Si pas de réponse, appelez les secours.',
     cpr2_t:'Rythme des compressions',cpr2_d:'100–120 par minute. Appuyez fort — au moins 5 cm au centre de la poitrine.',
     cpr3_t:'Insufflations (si formé)',cpr3_d:'30 compressions → 2 insufflations. Inclinez la tête, soulevez le menton.',
@@ -695,7 +795,10 @@ const T = {
     v_notes:'Conditions connues / allergies',v_notes_ph:'Ex: diabétique, allergique à la pénicilline…',vitals_btn:'Évaluer avec Ergy',
     footer_desc:'Santé d\'urgence par IA pour les communautés sans accès médical suffisant.',footer_general:'Consultation générale',footer_emergency:'Urgence',footer_vitals:'Signes vitaux',footer_legal_title:'Légal',footer_terms:'Conditions d\'Utilisation',footer_privacy:'Confidentialité',
     footer_copy:'© 2026 CDxGems. Ergy AI est un outil de soutien clinique — ne remplace pas les soins médicaux professionnels.',
-    ergy_status_general:'Assistant clinique multispécialité',ergy_status_emergency:'🔴 Mode urgence actif',ergy_status_vitals:'Interprétation des signes vitaux',
+    nasa_eyebrow:'Programme Catastrophes NASA · Données Satellitaires en Direct',nasa_title:'Venezuela — Carte Satellitaire du Séisme',nasa_sub:'Évaluation des dommages en temps réel, détection des glissements et pannes électriques par satellites NASA.',nasa_map_title:'Données Satellitaires NASA — Séisme Venezuela Juin 2026',nasa_map_sub:'Cartes de dommages en temps réel, glissements, pannes et déformation du terrain capturés par satellites NASA. Données gratuites et accessibles au public.',nasa_btn1:'Ouvrir le Portail Catastrophes NASA',nasa_btn2:'Carte en Direct',nasa_btn3:'Estimation des Dommages aux Bâtiments',nasa_p1_title:'Images Satellitaires',nasa_p1_sub:'Vue aérienne des dégâts',nasa_p2_title:'Pannes Électriques',nasa_p2_sub:'Données lumières nocturnes',nasa_p3_title:'Risque de Glissement',nasa_p3_sub:'Détection zones à haut risque',nasa_p4_title:'Dommages aux Bâtiments',nasa_p4_sub:'Évaluation des infrastructures',nasa_credit:'Données du Programme Catastrophes NASA · maps.disasters.nasa.gov · Accès gratuit et public',
+    p5_header:'Si vous êtes coincé, vous êtes en vie. C\'est ce qui compte le plus.',p5_header_sub:'Suivez ces étapes exactement.',p5_1t:'Envoyez votre position MAINTENANT',p5_1d:'Utilisez le bouton "ENVOYER MA POSITION" en haut. Il ouvre WhatsApp avec vos coordonnées. Envoyez à n\'importe quel numéro.',p5_2t:'Économisez la batterie — c\'est votre vie',p5_2d:'Activez le Mode Avion. Luminosité minimale. Allumez seulement toutes les 30 minutes.',p5_3t:'Signalez votre position',p5_3d:'Frappez: TOC-TOC-TOC, pause, TOC-TOC-TOC. Signal de sauvetage universel.',p5_4t:'Protégez vos voies respiratoires',p5_4d:'Couvrez nez et bouche avec du tissu. Respirez lentement. Ne criez pas — ça consomme l\'oxygène.',p5_5t:'Ne faites PAS ceci',p5_5d:'Ne déplacez pas les structures. N\'allumez pas de feu. Ne tirez pas brusquement un membre coincé.',p5_6t:'Économisez l\'énergie et restez calme',p5_6d:'Respirez lentement. Allongez-vous si possible. Des équipes de 20 pays vous cherchent.',
+    p6_header:'⚠️ Le garrot est le DERNIER recours.',p6_header_sub:'Uniquement pour un saignement massif qui ne s\'arrête pas avec pression directe sur bras ou jambes.',p6_1t:'Quand l\'utiliser?',p6_1d:'Uniquement sur les membres. Jamais sur le cou, le tronc ou la tête. Seulement après 10 minutes de pression sans résultat.',p6_2t:'Improvisez le garrot',p6_2d:'Ceinture, cravate, bande de tissu solide — minimum 3-4 cm de large. Jamais de cordon fin ou fil de fer.',p6_3t:'Appliquez correctement',p6_3d:'5–7 cm au-dessus de la plaie. Enroulez le tissu deux fois. Faites un nœud. Placez un bâton. Tournez jusqu\'à l\'arrêt du saignement.',p6_4t:'NOTEZ L\'HEURE — c\'est critique',p6_4d:'Écrivez l\'heure sur la peau du patient. Le médecin DOIT le savoir. Plus de 2h augmente le risque de perte du membre.',p6_5t:'Ne faites PAS ceci',p6_5d:'Ne le desserrez pas une fois appliqué. Ne le couvrez pas. N\'utilisez pas de cordeau fin. Ne le placez pas sur des articulations.',p6_6t:'Syndrome d\'écrasement — CRITIQUE',p6_6d:'Membre coincé plus d\'1 heure — Ne libérez PAS brusquement. Risque d\'arrêt cardiaque. Attendez les secouristes.',
+    p7_header:'⚠️ Les 72 prochaines heures sont critiques pour les infections.',p7_header_sub:'Une plaie non traitée peut s\'infecter en heures dans les décombres.',p7_1t:'Nettoyez la plaie — sans antiseptique',p7_1d:'Eau propre, pression directe, minimum 5 minutes. Plus d\'eau vaut mieux que tout antiseptique.',p7_2t:'Si vous avez de l\'alcool ou de l\'eau oxygénée',p7_2d:'Utilisez-le UNE FOIS sur les bords — jamais à l\'intérieur. L\'alcool à l\'intérieur abîme le tissu.',p7_3t:'Couvrez et improvisez un pansement',p7_3d:'Tissu propre. Changez toutes les 12 heures. Gardez la plaie couverte.',p7_4t:'Signes d\'infection — agissez immédiatement',p7_4d:'Rougeur qui s\'étend, pus, odeur forte, lignes rouges (très urgent), fièvre +38.5°C, confusion.',p7_5t:'Plaies par écrasement — risque spécial',p7_5d:'Risque de tétanos et gangrène. Soins médicaux urgents. Tissu sombre ou noir = urgence.',p7_6t:'Fièvre post-traumatique',p7_6d:'Fièvre après 24–48h = infection. Avec confusion ou raideur du cou = urgence critique.',
     welcome_general:'Bonjour. Je suis Ergy, votre assistant clinique IA. Je peux aider à évaluer les symptômes et fournir un soutien multispécialité. Quelle est la situation du patient?',
     welcome_emergency:'⚠️ Mode urgence actif. Décrivez l\'urgence maintenant — que se passe-t-il avec le patient? Je vous donnerai des instructions immédiates.',
     thinking:'Évaluation…',no_conn:'Pas de connexion. Utilisez les protocoles de premiers secours sur la page principale.',no_vitals:'Veuillez entrer au moins un signe vital.',analyzing:'Analyse des signes vitaux…',vitals_offline:'Hors ligne. Valeurs normales: FC 60–100 bpm, Temp 36–37.5°C, TA 90/60–120/80, SpO₂ ≥95%.',
@@ -708,7 +811,7 @@ const T = {
     nav_consult:'问诊',nav_firstaid:'急救指南',nav_emergency:'紧急求助',
     banner_title:'紧急协议激活中',banner_sub:'AI即时分诊 — 低网络连接下同样可用。',banner_btn:'启动协议',
     hero_badge:'Ergy：您的智能生物医学支持',
-    hero_h1:'世界级医疗，<br><span class="font-extrabold italic text-gem-teal">一步一步陪伴您。</span>',
+    hero_h1:'医疗护理，<br><span class="font-extrabold italic text-gem-teal">一步一步陪伴您。</span>',
     hero_sub:'多专科AI分诊，为紧急情况提供远程临床支持 — 专为医疗资源匮乏的社区设计。',
     hero_btn1:'与Ergy对话',hero_btn2:'急救指南',
     card_title:'咨询Ergy AI',card_sub:'多专科分诊。专为医疗条件有限地区设计。',card_btn:'立即咨询',
@@ -718,7 +821,9 @@ const T = {
     gem2_title:'生命体征',gem2_sub:'输入患者数值获取即时AI解读。',
     gem3_title:'急救',gem3_sub:'心肺复苏、止血、窒息、烧伤 — 逐步指导。',
     fa_eyebrow:'紧急协议',fa_title:'急救指南',fa_sub:'针对最危急情况的逐步指导。离线可用。请分享此页面。',
-    tab1:'心肺复苏',tab2:'止血',tab3:'窒息',tab4:'烧伤',fa_ergy_btn:'获取Ergy实时指导',
+    tab1:'心肺复苏',tab2:'止血',tab3:'窒息',tab4:'烧伤',tab5:'🆘 我被困住了',tab6:'止血带',tab7:'感染',fa_ergy_btn:'获取Ergy实时指导',
+    sos_bar_title:'您被困住了吗？',sos_bar_sub:'一键将您的精确位置发送给救援人员。',sos_bar_btn:'立即发送我的位置',
+    sos_modal_title:'正在发送您的位置',sos_modal_getting:'正在获取GPS坐标...',sos_modal_ready:'✅ 已找到位置。选择发送方式：',sos_modal_whatsapp:'通过WhatsApp发送',sos_modal_sms:'通过短信发送',sos_modal_coords:'您的坐标：',sos_modal_copy:'复制坐标',sos_modal_copied:'已复制！',sos_modal_tip:'节省电量：发送后开启飞行模式。',sos_modal_close:'关闭',sos_modal_nogps:'GPS不可用。请从Google Maps手动复制您的位置。',sos_msg_prefix:'🆘 我被困住了 - 需要救援\n\n我的精确位置：\n📍 ',sos_msg_suffix:'\n\n通过CDxGems.doctor打开',
     cpr1_t:'检查反应',cpr1_d:'轻拍肩膀并大声呼叫。若无反应，立即拨打急救电话。',
     cpr2_t:'按压节奏',cpr2_d:'每分钟100–120次。用力按压 — 胸部中央至少5厘米深。',
     cpr3_t:'人工呼吸（如受过训练）',cpr3_d:'30次按压 → 2次呼吸。仰头抬颌，封住嘴巴。',
@@ -743,7 +848,10 @@ const T = {
     v_notes:'已知病症/过敏',v_notes_ph:'如：糖尿病患者，对青霉素过敏…',vitals_btn:'用Ergy评估',
     footer_desc:'为医疗资源匮乏社区提供AI紧急医疗服务。',footer_general:'普通咨询',footer_emergency:'紧急',footer_vitals:'生命体征',footer_legal_title:'法律',footer_terms:'使用条款',footer_privacy:'隐私政策',
     footer_copy:'© 2026 CDxGems. Ergy AI是临床支持工具 — 不能替代专业医疗服务。',
-    ergy_status_general:'多专科临床助手',ergy_status_emergency:'🔴 紧急模式已激活',ergy_status_vitals:'生命体征解读',
+    nasa_eyebrow:'NASA灾害计划 · 实时卫星数据',nasa_title:'委内瑞拉地震 — 卫星地图',nasa_sub:'NASA卫星提供实时损害评估、滑坡探测和停电数据。',nasa_map_title:'NASA卫星数据 — 2026年6月委内瑞拉地震',nasa_map_sub:'查看NASA卫星捕获的实时损害地图、滑坡、停电和地形变形数据。数据免费公开获取。',nasa_btn1:'打开NASA灾害门户',nasa_btn2:'实时地图',nasa_btn3:'建筑损害评估',nasa_p1_title:'卫星图像',nasa_p1_sub:'损害鸟瞰图',nasa_p2_title:'停电情况',nasa_p2_sub:'夜间灯光数据',nasa_p3_title:'滑坡风险',nasa_p3_sub:'高风险区域探测',nasa_p4_title:'建筑损害',nasa_p4_sub:'基础设施评估',nasa_credit:'数据来源：NASA灾害计划 · maps.disasters.nasa.gov · 免费公开获取',
+    p5_header:'如果您被困，您还活着。这是最重要的。',p5_header_sub:'请严格按照以下步骤操作。',p5_1t:'立即发送您的位置',p5_1d:'使用上方"立即发送我的位置"按钮。会打开WhatsApp并附上坐标。发给任何号码。',p5_2t:'节省电量 — 这是您的生命',p5_2d:'立即开启飞行模式。调到最低亮度。每30分钟开机一次查看消息。',p5_3t:'发出位置信号',p5_3d:'敲击：嗒嗒嗒，停顿，嗒嗒嗒。这是通用救援信号。听到噪音时重复。',p5_4t:'保护您的呼吸道',p5_4d:'用布覆盖口鼻。慢慢呼吸。不要呼喊 — 会消耗氧气。',p5_5t:'不要这样做',p5_5d:'不要移动周围结构。不要点火。不要猛力拉被压住的肢体。',p5_6t:'保存体力，保持冷静',p5_6d:'慢慢呼吸。尽量躺下。来自20多个国家的救援队正在寻找您。',
+    p6_header:'⚠️ 止血带是最后手段。',p6_header_sub:'仅用于直接压迫无法止住的手臂或腿部大量出血。',p6_1t:'何时使用？',p6_1d:'仅用于四肢。绝不用于颈部、躯干或头部。仅当压迫10分钟无效时使用。',p6_2t:'即兴制作止血带',p6_2d:'腰带、领带、结实的布条 — 最少3-4厘米宽。绝不用细绳或铁丝。',p6_3t:'正确绑扎',p6_3d:'伤口上方5-7厘米处。将布缠绕两圈。打一个结。放一根棍子。旋转直到出血停止。',p6_4t:'记录时间 — 至关重要',p6_4d:'在患者皮肤上写下确切时间。医生必须知道。超过2小时会增加截肢风险。',p6_5t:'不要这样做',p6_5d:'绑好后不要松开。不要遮盖。不要用细绳或铁丝。不要绑在关节处。',p6_6t:'挤压综合征 — 危急',p6_6d:'肢体被困超过1小时 — 不要突然解救。可能导致心脏骤停。等待救援人员。',
+    p7_header:'⚠️ 未来72小时对感染控制至关重要。',p7_header_sub:'在废墟条件下，未处理的伤口可能在数小时内感染。',p7_1t:'清洁伤口 — 无需消毒剂',p7_1d:'用干净的水。直接加压冲洗至少5分钟。大量清水比任何消毒剂都好。',p7_2t:'如果有酒精或双氧水',p7_2d:'只用一次清洁边缘 — 绝不用于伤口内部。酒精会损伤组织。',p7_3t:'覆盖并即兴制作绷带',p7_3d:'干净的布料。每12小时更换一次。保持伤口覆盖。',p7_4t:'感染迹象 — 立即行动',p7_4d:'扩散的红肿、脓液、异味、从伤口延伸的红线（非常紧急）、发烧+38.5°C、神志不清。',p7_5t:'挤压伤口 — 特殊风险',p7_5d:'破伤风和坏疽风险。需要紧急医疗救治。黑色或深色组织 = 紧急情况。',p7_6t:'创伤后发烧',p7_6d:'24-48小时后发烧 = 感染。伴有意识混乱或颈部僵硬 = 危急情况。',
     welcome_general:'您好。我是Ergy，您的临床AI助手。我可以帮助评估症状、指导操作程序，提供多专科支持。患者目前的情况是什么？',
     welcome_emergency:'⚠️ 紧急模式已激活。请立即描述紧急情况 — 患者发生了什么？我将给出即时的逐步指导。',
     thinking:'评估中…',no_conn:'无连接。请使用主页上的急救协议。',no_vitals:'请至少输入一项生命体征。',analyzing:'分析生命体征中…',vitals_offline:'离线。正常参考值：心率60–100次/分，体温36–37.5°C，血压90/60–120/80，血氧≥95%。',
@@ -839,11 +947,19 @@ function showProtocol(id){
 // ===================== SOS LOCATION =====================
 let userCoords = null;
 function sendSOS() {
+  const t = T[lang];
   document.getElementById('sosModal').classList.remove('hidden');
   document.getElementById('sosOptions').classList.add('hidden');
-  document.getElementById('sosMsg').textContent = 'Obteniendo coordenadas GPS...';
+  document.getElementById('sosModalTitle').textContent = t.sos_modal_title;
+  document.getElementById('sosMsg').textContent = t.sos_modal_getting;
+  document.getElementById('sosWhatsappBtn').textContent = t.sos_modal_whatsapp;
+  document.getElementById('sosSMSBtn').textContent = t.sos_modal_sms;
+  document.getElementById('sosCoordsLabel').textContent = t.sos_modal_coords;
+  document.getElementById('sosCopyBtn').textContent = t.sos_modal_copy;
+  document.getElementById('sosTip').textContent = t.sos_modal_tip;
+  document.getElementById('sosCloseBtn').textContent = t.sos_modal_close;
   if (!navigator.geolocation) {
-    document.getElementById('sosMsg').textContent = 'GPS no disponible. Copia tu ubicación manualmente de Google Maps.';
+    document.getElementById('sosMsg').textContent = t.sos_modal_nogps;
     return;
   }
   navigator.geolocation.getCurrentPosition(pos => {
@@ -851,20 +967,21 @@ function sendSOS() {
     const lng = pos.coords.longitude.toFixed(6);
     userCoords = {lat, lng};
     const mapsLink = `https://maps.google.com/?q=${lat},${lng}`;
-    const msg = encodeURIComponent(`🆘 ESTOY ATRAPADO - NECESITO RESCATE\n\nMi ubicación exacta:\n📍 ${mapsLink}\nCoordenadas: ${lat}, ${lng}\n\nAbierto con CDxGems.doctor`);
+    const msg = encodeURIComponent(`${t.sos_msg_prefix}${mapsLink}\nCoordenadas: ${lat},${lng}${t.sos_msg_suffix}`);
     document.getElementById('sosCoordsText').textContent = `${lat}, ${lng}`;
     document.getElementById('sosWhatsapp').href = `https://wa.me/?text=${msg}`;
     document.getElementById('sosSMS').href = `sms:?body=${msg}`;
-    document.getElementById('sosMsg').textContent = '✅ Ubicación obtenida. Elige cómo enviarla:';
+    document.getElementById('sosMsg').textContent = t.sos_modal_ready;
     document.getElementById('sosOptions').classList.remove('hidden');
   }, err => {
-    document.getElementById('sosMsg').textContent = 'No se pudo obtener GPS. Ve a Google Maps, copia el link de tu ubicación y envíalo por WhatsApp.';
+    document.getElementById('sosMsg').textContent = t.sos_modal_nogps;
   }, {enableHighAccuracy: true, timeout: 10000});
 }
 function copyCoords() {
+  const t = T[lang];
   if (userCoords) {
     navigator.clipboard.writeText(`${userCoords.lat}, ${userCoords.lng}`).then(() => {
-      document.querySelector('#sosCoords button').textContent = '¡Copiado!';
+      document.getElementById('sosCopyBtn').textContent = t.sos_modal_copied;
     });
   }
 }
