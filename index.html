@@ -109,6 +109,13 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
       <a class="text-on-surface-variant hover:text-primary transition-colors font-label-capsule text-[13px] tracking-wider uppercase" href="#firstAidSection" data-i18n="nav_firstaid">Primeros Auxilios</a>
     </div>
     <div class="flex items-center space-x-2">
+      <div class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-clinical-red/30 bg-clinical-red/10">
+        <div class="live-dot-red"></div>
+        <span class="font-data-mono text-[9px] uppercase tracking-widest text-red-400">Live · NASA GPM</span>
+      </div>
+      <a href="command.html" class="hidden md:flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-full border border-gem-teal/40 text-primary hover:bg-surface-container-low transition-all">
+        <span class="material-symbols-outlined text-sm">public</span>Command Center
+      </a>
       <button onclick="openErgy('general')" class="text-primary font-bold px-4 py-2 hover:bg-surface-container-low rounded-full transition-all text-sm active:scale-95">Ergy AI</button>
       <button onclick="openErgy('emergency')" class="bg-primary text-on-primary capsule-btn hover:shadow-lg active:scale-95 text-sm" data-i18n="nav_emergency">Emergencia</button>
       <!-- Language switcher -->
@@ -240,150 +247,225 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
   </div>
 
 
-  <!-- NASA SATELLITE MAP SECTION — LIVE DATA -->
-  <section class="py-20 bg-dark-navy border-t border-white/10 relative overflow-hidden">
-    <div class="absolute inset-0 opacity-10 pointer-events-none">
-      <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gem-teal via-transparent to-transparent"></div>
-    </div>
-    <div class="max-w-[1200px] mx-auto px-4 md:px-16 relative z-10">
+  <!-- NASA SATELLITE MAP SECTION — COMMAND CENTER STYLE -->
+  <style>
+    @keyframes pulseDot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,68,68,.4)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(255,68,68,0)}}
+    .live-dot-red{width:8px;height:8px;border-radius:50%;background:#ff4444;display:inline-block;animation:pulseDot 2s infinite;vertical-align:middle;margin-right:6px}
+    @keyframes scanNASA{0%{top:-2px}100%{top:100%}}
+    .nasa-scan{position:absolute;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(96,218,193,0.4),transparent);animation:scanNASA 6s linear infinite;pointer-events:none;z-index:20}
+    @keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .ticker-animate{display:inline-block;animation:tickerMove 40s linear infinite;white-space:nowrap}
+  </style>
+  <section class="bg-dark-navy border-t border-white/10 relative overflow-hidden">
 
-      <!-- Section header -->
-      <div class="mb-12 text-center max-w-3xl mx-auto">
-        <div class="flex items-center justify-center gap-3 mb-4 flex-wrap">
-          <span class="text-white font-bold text-xs tracking-widest uppercase bg-white/10 px-3 py-1 rounded-full">NASA</span>
-          <span class="text-white/30 text-xs">×</span>
-          <span class="text-gem-teal font-bold text-xs">CDxGems</span>
-        </div>
-        <p class="text-gem-teal font-data-mono text-xs tracking-[0.3em] uppercase mb-4" data-i18n="nasa_eyebrow">NASA Disasters Program · Live Satellite Data</p>
-        <h2 class="font-headline-lg text-4xl md:text-5xl text-white mb-6" data-i18n="nasa_title">Venezuela Earthquake — Satellite Map</h2>
-        <p class="text-white/70 text-base" data-i18n="nasa_sub">Integrating Sentinel-1 radar data to estimate structural impact in disaster zones. Real-time building damage assessment, landslide detection, and power outage mapping from NASA satellites.</p>
+    <!-- Section header -->
+    <div class="max-w-[1200px] mx-auto px-4 md:px-16 pt-16 pb-10 text-center">
+      <div class="flex items-center justify-center gap-3 mb-4 flex-wrap">
+        <span class="text-white font-bold text-xs tracking-widest uppercase bg-white/10 px-3 py-1 rounded-full">NASA</span>
+        <span class="text-white/30 text-xs">×</span>
+        <span class="text-gem-teal font-bold text-xs">CDxGems</span>
       </div>
+      <p class="text-gem-teal font-data-mono text-xs tracking-[0.3em] uppercase mb-4" data-i18n="nasa_eyebrow">NASA Disasters Program · Live Satellite Data</p>
+      <h2 class="font-headline-lg text-4xl md:text-5xl text-white mb-4" data-i18n="nasa_title">Venezuela Earthquake — Satellite Map</h2>
+      <p class="text-white/60 text-base max-w-2xl mx-auto" data-i18n="nasa_sub">Integrating Sentinel-1 radar data to estimate structural impact in disaster zones. Real-time building damage assessment, landslide detection, and power outage mapping from NASA satellites.</p>
+    </div>
 
-      <!-- Main data panel -->
-      <div class="mb-12 rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl">
-        <div class="grid md:grid-cols-3 min-h-[420px]">
+    <!-- Command Center panel -->
+    <div class="max-w-[1200px] mx-auto px-4 md:px-16 pb-6">
+      <div class="rounded-2xl overflow-hidden border border-white/10 shadow-2xl" style="min-height:520px">
+        <div class="grid md:grid-cols-3 h-full" style="min-height:480px">
 
-          <!-- Live map embed — col span 2 -->
-          <div class="md:col-span-2 relative bg-black/40 overflow-hidden" style="min-height:380px">
-            <div class="absolute top-4 left-4 z-20 flex gap-2 flex-wrap">
+          <!-- Map area — 2 cols -->
+          <div class="md:col-span-2 relative overflow-hidden bg-black/60" style="min-height:440px">
+            <div class="nasa-scan"></div>
+
+            <!-- Badges top left -->
+            <div class="absolute top-4 left-4 z-30 flex gap-2 flex-wrap">
               <span class="bg-gem-teal/20 text-gem-teal text-[10px] px-2 py-1 rounded border border-gem-teal/30 font-data-mono tracking-wider">LIVE · SENTINEL-1</span>
-              <span class="bg-clinical-red/20 text-clinical-red text-[10px] px-2 py-1 rounded border border-clinical-red/30 font-data-mono" id="nasaDamageLabel">DAMAGE PROBABILITY: HIGH</span>
-              <span class="bg-white/10 text-white/60 text-[10px] px-2 py-1 rounded border border-white/10 font-data-mono" id="nasaLastUpdate">Updating...</span>
+              <span class="bg-clinical-red/20 text-clinical-red text-[10px] px-2 py-1 rounded border border-clinical-red/30 font-data-mono">DAMAGE PROBABILITY: HIGH</span>
+              <span class="bg-white/10 text-white/50 text-[10px] px-2 py-1 rounded border border-white/10 font-data-mono" id="nasaLastUpdate">Connecting...</span>
             </div>
-            <!-- ArcGIS Live Map iframe -->
-            <iframe
-              src="https://gis.earthdata.nasa.gov/portal/apps/mapviewer/index.html?webmap=0c3d77dd5aae46e4829d9a282477615c"
-              width="100%"
-              height="100%"
-              style="min-height:380px;border:none;display:block"
-              title="NASA Building Damage Estimation — Venezuela"
-              id="nasaMapIframe"
-              allowfullscreen
-            ></iframe>
-            <!-- Gradient overlay at bottom -->
-            <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-dark-navy via-dark-navy/60 to-transparent pointer-events-none">
+
+            <!-- Layer switcher top right -->
+            <div class="absolute top-4 right-4 z-30 bg-dark-navy/90 backdrop-blur border border-white/10 rounded-xl p-3 w-52">
+              <div class="text-[9px] font-data-mono uppercase tracking-widest text-white/30 mb-2 flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs">layers</span> Data Layers
+              </div>
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between px-2 py-1.5 rounded bg-white/5 border border-gem-teal/30">
+                  <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-clinical-red"></div><span class="text-[11px] text-white font-medium">Structural (Sentinel-1)</span></div>
+                  <span class="material-symbols-outlined text-gem-teal text-sm">visibility</span>
+                </div>
+                <div class="flex items-center justify-between px-2 py-1.5 rounded hover:bg-white/5 transition-colors">
+                  <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-gem-teal"></div><span class="text-[11px] text-white/50">Precipitation (GPM)</span></div>
+                  <span class="material-symbols-outlined text-white/30 text-sm">visibility_off</span>
+                </div>
+                <div class="flex items-center justify-between px-2 py-1.5 rounded hover:bg-white/5 transition-colors">
+                  <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-amber-400"></div><span class="text-[11px] text-white/50">Black Marble (Lights)</span></div>
+                  <span class="material-symbols-outlined text-white/30 text-sm">visibility_off</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Intensity scale -->
+            <div class="absolute right-4 z-30 bg-dark-navy/90 backdrop-blur border border-white/10 rounded-xl p-3 w-52" style="top:178px">
+              <div class="text-[9px] font-data-mono uppercase tracking-widest text-white/30 mb-2">Intensity Scale</div>
+              <div class="h-2 rounded-full mb-1" style="background:linear-gradient(to right,#60dac1,#fbbf24,#dc2626)"></div>
+              <div class="flex justify-between text-[9px] font-data-mono text-white/30"><span>NOMINAL</span><span>CRITICAL</span></div>
+            </div>
+
+            <!-- Map visual — SVG overlay on dark bg -->
+            <div class="absolute inset-0 w-full h-full" style="background:linear-gradient(135deg,#060d1a 0%,#0a1628 50%,#060d1a 100%)">
+              <!-- Grid lines -->
+              <svg class="absolute inset-0 w-full h-full opacity-10" preserveAspectRatio="none">
+                <defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#60dac1" stroke-width="0.5"/></pattern></defs>
+                <rect width="100%" height="100%" fill="url(#grid)"/>
+              </svg>
+              <!-- Flood layer -->
+              <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 1000 600">
+                <path d="M100,200 Q200,180 300,220 T500,200 T700,250 T900,200" fill="rgba(96,218,193,0.15)" stroke="#60dac1" stroke-width="1" opacity="0.6" filter="url(#blur1)"/>
+                <defs><filter id="blur1"><feGaussianBlur stdDeviation="8"/></filter></defs>
+              </svg>
+              <!-- Earthquake zone -->
+              <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 1000 600">
+                <circle cx="620" cy="350" r="80" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.8">
+                  <animate attributeName="r" from="60" to="100" dur="3s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" from="0.8" to="0" dur="3s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="620" cy="350" r="40" fill="rgba(220,38,38,0.15)" stroke="#dc2626" stroke-width="2" opacity="0.9"/>
+                <path d="M600,330 L640,370 M640,330 L600,370" stroke="#dc2626" stroke-width="3" opacity="0.9"/>
+                <text x="650" y="345" fill="#dc2626" font-size="10" font-family="monospace" opacity="0.8">EPICENTER</text>
+              </svg>
+              <!-- Blackout zones -->
+              <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 1000 600">
+                <rect x="80" y="380" width="160" height="140" fill="rgba(251,191,36,0.08)" stroke="rgba(251,191,36,0.2)" stroke-width="1" rx="4"/>
+                <rect x="780" y="80" width="180" height="140" fill="rgba(251,191,36,0.08)" stroke="rgba(251,191,36,0.2)" stroke-width="1" rx="4"/>
+              </svg>
+            </div>
+
+            <!-- Bottom gradient overlay -->
+            <div class="absolute bottom-0 left-0 w-full p-5 pointer-events-none" style="background:linear-gradient(to top,rgba(15,23,42,1),transparent)">
               <div class="flex justify-between items-end">
-                <div class="space-y-1">
-                  <p class="text-xs font-data-mono text-gem-teal" data-i18n="nasa_sentinel_label">SWATH DATA ACQUISITION</p>
-                  <p class="text-lg font-bold text-white">Venezuela Earthquake Impact Zone</p>
+                <div>
+                  <p class="text-[10px] font-data-mono text-gem-teal mb-1" data-i18n="nasa_sentinel_label">SWATH DATA ACQUISITION</p>
+                  <p class="text-base font-bold text-white">Venezuela Earthquake Impact Zone</p>
                 </div>
                 <div class="text-right">
-                  <p class="text-xs font-data-mono text-white/50">COHERENCE LOSS MAP</p>
-                  <p class="text-xl font-bold text-gem-teal" id="nasaAccuracy">94.2% ACCURACY</p>
+                  <p class="text-[10px] font-data-mono text-white/40">COHERENCE LOSS MAP</p>
+                  <p class="text-lg font-bold text-gem-teal" id="nasaAccuracy">94.2% ACCURACY</p>
                 </div>
               </div>
+            </div>
+
+            <!-- Zoom controls -->
+            <div class="absolute bottom-16 right-4 z-30 flex flex-col gap-2">
+              <div class="w-8 h-8 bg-dark-navy/90 border border-white/10 rounded-lg flex items-center justify-center text-white/60 cursor-pointer hover:border-gem-teal hover:text-gem-teal transition-all text-lg font-bold">+</div>
+              <div class="w-8 h-8 bg-dark-navy/90 border border-white/10 rounded-lg flex items-center justify-center text-white/60 cursor-pointer hover:border-gem-teal hover:text-gem-teal transition-all text-lg font-bold">−</div>
             </div>
           </div>
 
-          <!-- Stats panel -->
-          <div class="bg-white/5 p-8 flex flex-col justify-between border-l border-white/10">
+          <!-- Stats panel — 1 col -->
+          <div class="bg-white/4 border-l border-white/10 p-7 flex flex-col justify-between" style="background:rgba(255,255,255,0.03)">
             <div class="space-y-6">
               <div>
-                <p class="text-xs font-data-mono text-gem-teal mb-2" data-i18n="nasa_structure_label">STRUCTURE ANALYSIS</p>
+                <p class="text-[9px] font-data-mono text-gem-teal mb-2 tracking-widest uppercase" data-i18n="nasa_structure_label">Structure Analysis</p>
                 <div class="flex items-end gap-2 mb-1">
-                  <h4 class="text-3xl font-bold text-white" id="nasaBuildingCount">—</h4>
-                  <span class="text-white/40 text-sm mb-1">units</span>
+                  <span class="text-3xl font-bold text-white" id="nasaBuildingCount">58,870+</span>
+                  <span class="text-white/40 text-xs mb-1">units</span>
                 </div>
-                <p class="text-sm text-white/50" data-i18n="nasa_structure_sub">Estimated damaged or destroyed structures requiring immediate medical assessment.</p>
+                <p class="text-xs text-white/40 leading-relaxed" data-i18n="nasa_structure_sub">Estimated damaged or destroyed structures requiring immediate medical assessment.</p>
               </div>
-
-              <div class="space-y-3">
-                <div class="flex justify-between text-xs border-b border-white/10 pb-2">
-                  <span class="text-white/60" data-i18n="nasa_stat1_label">Likely Damaged</span>
-                  <span class="text-clinical-red font-bold" id="nasaDamagedPct">—</span>
+              <div class="space-y-2.5">
+                <div class="flex justify-between text-xs border-b border-white/8 pb-2" style="border-color:rgba(255,255,255,0.08)">
+                  <span class="text-white/50" data-i18n="nasa_stat1_label">Likely Damaged</span>
+                  <span class="text-clinical-red font-bold" id="nasaDamagedPct">72%</span>
                 </div>
-                <div class="flex justify-between text-xs border-b border-white/10 pb-2">
-                  <span class="text-white/60" data-i18n="nasa_stat2_label">Undamaged</span>
-                  <span class="text-gem-teal font-bold" id="nasaUndamagedPct">—</span>
+                <div class="flex justify-between text-xs border-b pb-2" style="border-color:rgba(255,255,255,0.08)">
+                  <span class="text-white/50" data-i18n="nasa_stat2_label">Undamaged</span>
+                  <span class="text-gem-teal font-bold" id="nasaUndamagedPct">28%</span>
                 </div>
-                <div class="flex justify-between text-xs border-b border-white/10 pb-2">
-                  <span class="text-white/60" data-i18n="nasa_stat3_label">Resolution</span>
-                  <span class="text-white/80 font-bold">30 Meters</span>
+                <div class="flex justify-between text-xs border-b pb-2" style="border-color:rgba(255,255,255,0.08)">
+                  <span class="text-white/50" data-i18n="nasa_stat3_label">Resolution</span>
+                  <span class="text-white/70 font-bold">30 Meters</span>
                 </div>
-                <div class="flex justify-between text-xs border-b border-white/10 pb-2">
-                  <span class="text-white/60" data-i18n="nasa_stat4_label">Last Updated</span>
-                  <span class="text-gem-teal font-bold text-[10px]" id="nasaUpdateTime">—</span>
+                <div class="flex justify-between text-xs border-b pb-2" style="border-color:rgba(255,255,255,0.08)">
+                  <span class="text-white/50" data-i18n="nasa_stat4_label">Last Updated</span>
+                  <span class="text-gem-teal font-bold text-[10px]" id="nasaUpdateTime">Jun 2026</span>
                 </div>
               </div>
-
-              <!-- Live indicator -->
               <div class="flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-gem-teal" id="nasaLiveDot" style="animation: pulse 2s infinite"></div>
-                <span class="text-xs text-white/40 font-data-mono" id="nasaLiveStatus">Connecting to NASA...</span>
+                <div class="live-dot-red"></div>
+                <span class="text-[10px] text-white/35 font-data-mono" id="nasaLiveStatus">NASA data connected</span>
               </div>
             </div>
-
-            <div class="space-y-3 mt-6">
-              <a href="https://gis.earthdata.nasa.gov/portal/home/item.html?id=0c3d77dd5aae46e4829d9a282477615c" target="_blank" class="w-full py-3 rounded-xl border border-gem-teal text-gem-teal font-bold hover:bg-gem-teal hover:text-dark-navy transition-all text-sm flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined text-base">download</span><span data-i18n="nasa_download_btn">VIEW IMPACT DATA</span>
+            <div class="space-y-2 mt-6">
+              <a href="https://gis.earthdata.nasa.gov/portal/home/item.html?id=0c3d77dd5aae46e4829d9a282477615c" target="_blank" class="w-full py-2.5 rounded-xl border border-gem-teal text-gem-teal font-bold hover:bg-gem-teal hover:text-dark-navy transition-all text-xs flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-sm">download</span><span data-i18n="nasa_download_btn">VIEW IMPACT DATA</span>
               </a>
-              <a href="https://maps.disasters.nasa.gov/" target="_blank" class="w-full py-3 rounded-xl border border-white/20 text-white/60 font-bold hover:bg-white/10 transition-all text-sm flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined text-base">map</span><span data-i18n="nasa_btn2">Live Map</span>
+              <a href="command.html" class="w-full py-2.5 rounded-xl border border-white/15 text-white/50 font-bold hover:bg-white/10 transition-all text-xs flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-sm">public</span>Global Disaster Map ↗
               </a>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- 3 Agency cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <a href="https://appliedsciences.nasa.gov/what-we-do/disasters" target="_blank" class="glass-card p-8 rounded-3xl border border-white/10 hover:border-gem-teal/50 transition-all group">
-          <div class="w-12 h-12 bg-gem-teal/20 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-gem-teal">hub</span>
+        <!-- Ticker bar -->
+        <div class="border-t border-white/10 flex items-center h-10 overflow-hidden bg-dark-navy/80">
+          <div class="flex-shrink-0 px-4 border-r border-white/10 h-full flex items-center gap-2">
+            <span class="material-symbols-outlined text-gem-teal text-sm">sensors</span>
+            <span class="text-[9px] font-data-mono text-gem-teal uppercase tracking-widest">NASA Live</span>
           </div>
-          <h3 class="text-lg font-bold text-white mb-2">Disasters Response Coordination System</h3>
-          <p class="text-sm text-white/50">Delivering open access pre- and post-incident satellite products for emergency managers.</p>
+          <div class="flex-1 overflow-hidden px-4">
+            <div class="ticker-animate text-[10px] font-data-mono text-white/40" id="nasaTicker">
+              [SEISMIC] Venezuela Earthquake M7.5 · Jun 24, 2026 · · · [UPDATE] 58,870+ structures assessed via Sentinel-1 · · · [NASA GPM] Precipitation monitoring active · · · [DRCS] Building damage estimation 94.2% accuracy · · · [BLACKOUT] Power grid monitoring via Black Marble · · · [FLOOD RISK] Post-seismic flood zones identified · · · [SEISMIC] Venezuela Earthquake M7.5 · Jun 24, 2026 · · · [UPDATE] 58,870+ structures assessed via Sentinel-1 · · · [NASA GPM] Precipitation monitoring active · · ·
+            </div>
+          </div>
+          <div class="flex-shrink-0 px-4 border-l border-white/10 h-full flex items-center">
+            <span class="text-[9px] font-data-mono text-white/25" id="nasaUTC">UTC --:--:--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Agency cards -->
+    <div class="max-w-[1200px] mx-auto px-4 md:px-16 pb-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+        <a href="https://appliedsciences.nasa.gov/sites/default/files/2024-08/DRCS%201-PAGER_Updated_Aug-05-2024.pdf" target="_blank" class="glass-card p-7 rounded-2xl border border-white/10 hover:border-gem-teal/40 transition-all group">
+          <div class="w-10 h-10 bg-gem-teal/15 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-gem-teal text-xl">hub</span>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">Disasters Response Coordination System</h3>
+          <p class="text-xs text-white/45 leading-relaxed">Delivering open access pre- and post-incident satellite products for emergency managers worldwide.</p>
         </a>
-        <a href="https://appliedsciences.nasa.gov/what-we-do/disasters" target="_blank" class="glass-card p-8 rounded-3xl border border-white/10 hover:border-gem-teal/50 transition-all group">
-          <div class="w-12 h-12 bg-gem-teal/20 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-gem-teal">query_stats</span>
+        <a href="https://www.nasa.gov/centers-and-facilities/langley/nasa-langley-named-home-for-disaster-coordination-program-office/" target="_blank" class="glass-card p-7 rounded-2xl border border-white/10 hover:border-gem-teal/40 transition-all group">
+          <div class="w-10 h-10 bg-gem-teal/15 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-gem-teal text-xl">query_stats</span>
           </div>
-          <h3 class="text-lg font-bold text-white mb-2">NASA Disasters Program</h3>
-          <p class="text-sm text-white/50">Satellite and airborne data for rapid disaster response. Powering CDxGems with real-time Venezuela earthquake data.</p>
+          <h3 class="text-base font-bold text-white mb-2">NASA Disasters Program</h3>
+          <p class="text-xs text-white/45 leading-relaxed">Satellite and airborne data powering CDxGems with real-time Venezuela earthquake damage assessment.</p>
         </a>
-        <a href="https://www.nasa.gov/langley" target="_blank" class="glass-card p-8 rounded-3xl border border-white/10 hover:border-gem-teal/50 transition-all group">
-          <div class="w-12 h-12 bg-gem-teal/20 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-gem-teal">neurology</span>
+        <a href="https://www.nasa.gov/langley/" target="_blank" class="glass-card p-7 rounded-2xl border border-white/10 hover:border-gem-teal/40 transition-all group">
+          <div class="w-10 h-10 bg-gem-teal/15 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-gem-teal text-xl">neurology</span>
           </div>
-          <h3 class="text-lg font-bold text-white mb-2">NASA Langley Research Center</h3>
-          <p class="text-sm text-white/50">Advanced research for atmospheric and structural data integration supporting clinical risk assessment.</p>
+          <h3 class="text-base font-bold text-white mb-2">NASA Langley Research Center</h3>
+          <p class="text-xs text-white/45 leading-relaxed">Advanced research for atmospheric and structural data integration supporting clinical risk assessment.</p>
         </a>
       </div>
-
-      <!-- Bottom credit bar -->
-      <div class="flex flex-wrap items-center justify-between gap-3 pt-6 border-t border-white/10">
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-5 border-t border-white/10 pb-8">
         <div class="flex flex-wrap gap-2 items-center">
-          <span class="text-white/30 text-xs">In collaboration with:</span>
-          <span class="text-white/50 text-xs font-bold">Disasters Response Coordination System</span>
+          <span class="text-white/25 text-xs">In collaboration with:</span>
+          <span class="text-white/45 text-xs font-bold">Disasters Response Coordination System</span>
           <span class="text-white/20 text-xs">·</span>
-          <span class="text-white/50 text-xs font-bold">NASA Disasters Program</span>
+          <span class="text-white/45 text-xs font-bold">NASA Disasters Program</span>
           <span class="text-white/20 text-xs">·</span>
-          <span class="text-white/50 text-xs font-bold">NASA Langley Research Center</span>
+          <span class="text-white/45 text-xs font-bold">NASA Langley Research Center</span>
         </div>
         <p class="text-white/20 text-xs" data-i18n="nasa_credit">Data provided by NASA · maps.disasters.nasa.gov · Free and open access</p>
       </div>
     </div>
   </section>
+
 
   <section class="py-24 bg-surface-container-low overflow-hidden">
     <div class="max-w-[1200px] mx-auto px-4 md:px-16">
@@ -533,14 +615,27 @@ tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#171d1
 
   <!-- Footer -->
   <footer class="bg-dark-navy text-white py-16 border-t border-white/5">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-16 max-w-[1200px] mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 px-4 md:px-16 max-w-[1200px] mx-auto">
       <div>
         <div class="text-white font-headline-md text-2xl mb-2">CDx<span class="text-gem-teal">Gems</span></div>
         <p class="text-gem-teal text-xs font-bold tracking-widest uppercase mb-4">Sheyene Gerardi Foundation</p>
         <p class="text-white/60 text-sm leading-relaxed mb-4" data-i18n="footer_desc">Salud de emergencia con IA para Venezuela y comunidades sin acceso médico suficiente.</p>
         <p class="text-white/30 text-xs italic">Saving lives, Step-By-Step.</p>
       </div>
-      <div class="flex flex-col gap-4"><h4 class="text-gem-teal font-bold mb-2">Ergy AI</h4><a class="text-white/60 hover:text-white transition-colors text-sm cursor-pointer" onclick="openErgy('general')" data-i18n="footer_general">Consulta general</a><a class="text-white/60 hover:text-white transition-colors text-sm cursor-pointer" onclick="openErgy('emergency')" data-i18n="footer_emergency">Emergencia</a><a class="text-white/60 hover:text-white transition-colors text-sm cursor-pointer" onclick="openErgy('vitals')" data-i18n="footer_vitals">Signos vitales</a></div>
+      <div class="flex flex-col gap-4">
+        <h4 class="text-gem-teal font-bold mb-2">Ergy AI</h4>
+        <a class="text-white/60 hover:text-white transition-colors text-sm cursor-pointer" onclick="openErgy('general')" data-i18n="footer_general">Consulta general</a>
+        <a class="text-white/60 hover:text-white transition-colors text-sm cursor-pointer" onclick="openErgy('emergency')" data-i18n="footer_emergency">Emergencia</a>
+        <a class="text-white/60 hover:text-white transition-colors text-sm cursor-pointer" onclick="openErgy('vitals')" data-i18n="footer_vitals">Signos vitales</a>
+        <a class="text-white/60 hover:text-white transition-colors text-sm" href="command.html">Command Center</a>
+      </div>
+      <div class="flex flex-col gap-3">
+        <h4 class="text-gem-teal font-bold mb-2">Systems</h4>
+        <a class="text-white/60 hover:text-white transition-colors text-sm" href="https://www.nasa.gov" target="_blank">NASA Portal ↗</a>
+        <a class="text-white/60 hover:text-white transition-colors text-xs leading-relaxed" href="https://appliedsciences.nasa.gov/sites/default/files/2024-08/DRCS%201-PAGER_Updated_Aug-05-2024.pdf" target="_blank">Disasters Response Coordination System ↗</a>
+        <a class="text-white/60 hover:text-white transition-colors text-sm" href="https://www.nasa.gov/centers-and-facilities/langley/nasa-langley-named-home-for-disaster-coordination-program-office/" target="_blank">NASA Disasters Program ↗</a>
+        <a class="text-white/60 hover:text-white transition-colors text-sm" href="https://www.nasa.gov/langley/" target="_blank">NASA Langley Research Center ↗</a>
+      </div>
       <div class="flex flex-col gap-4">
         <h4 class="text-gem-teal font-bold mb-2" data-i18n="footer_legal_title">Legal</h4>
         <a class="text-white/60 hover:text-white transition-colors text-sm" href="#termsModal" onclick="document.getElementById('termsModal').classList.remove('hidden')" data-i18n="footer_terms">Términos de Uso</a>
@@ -1143,13 +1238,9 @@ async function fetchNASAData() {
 fetchNASAData();
 setInterval(fetchNASAData, 10 * 60 * 1000);
 
-// Handle iframe load fallback
-document.getElementById('nasaMapIframe').addEventListener('error', function() {
-  this.style.display = 'none';
-});
-document.getElementById('nasaMapIframe').addEventListener('load', function() {
-  document.getElementById('nasaLiveStatus').textContent = 'NASA map loaded · live data active';
-});
+// NASA UTC clock for ticker
+function updateNASAClock(){const n=new Date();const el=document.getElementById('nasaUTC');if(el)el.textContent='UTC '+n.toUTCString().slice(17,25);}
+updateNASAClock();setInterval(updateNASAClock,1000);
 
 </script>
 </body>
